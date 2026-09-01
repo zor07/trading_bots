@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/tradingbot
+    url: jdbc:postgresql://localhost:5437/tradingbot
     username: ${env.DB_USERNAME:tradingbot}
     password: ${env.DB_PASSWORD:tradingbot}
     driver-class-name: org.postgresql.Driver
