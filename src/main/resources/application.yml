@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tradingbot
+    username: ${env.DB_USERNAME:tradingbot}
+    password: ${env.DB_PASSWORD:tradingbot}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+telegram:
+  bot-token: ${env.TELEGRAM_BOT_TOKEN}
+  bot-username: ${env.TELEGRAM_BOT_USERNAME}
+  chat-id: ${env.TELEGRAM_CHAT_ID}
+
+alerts:
+  symbols:
+    - BTCUSDT
+    - ETHUSDT
