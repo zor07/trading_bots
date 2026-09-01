@@ -27,7 +27,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.telegram:telegrambots:6.9.7.1")
-    implementation("me.paulschwarz:spring-dotenv:4.0.0")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
     runtimeOnly("org.postgresql:postgresql")
 

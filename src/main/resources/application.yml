@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5437/tradingbot
-    username: ${env.DB_USERNAME:tradingbot}
-    password: ${env.DB_PASSWORD:tradingbot}
+    username: ${DB_USERNAME:tradingbot}
+    password: ${DB_PASSWORD:tradingbot}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -12,9 +12,9 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
 telegram:
-  bot-token: ${env.TELEGRAM_BOT_TOKEN}
-  bot-username: ${env.TELEGRAM_BOT_USERNAME}
-  chat-id: ${env.TELEGRAM_CHAT_ID}
+  bot-token: ${TELEGRAM_BOT_TOKEN}
+  bot-username: ${TELEGRAM_BOT_USERNAME}
+  chat-id: ${TELEGRAM_CHAT_ID}
 
 alerts:
   symbols:
