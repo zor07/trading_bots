@@ -1,8 +1,10 @@
 package com.zor07.tradingbot.exchange.binance
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.zor07.tradingbot.exchange.ExchangeClient
 import com.zor07.tradingbot.exchange.SymbolProvider
 import com.zor07.tradingbot.exchange.binance.dto.BinanceTickerDto
+import com.zor07.tradingbot.exchange.binance.dto.toKline
 import com.zor07.tradingbot.exchange.model.Kline
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.ParameterizedTypeReference
@@ -31,7 +33,18 @@ class BinanceClient(
     }
 
     override fun getKlines(symbol: String, candleInterval: String, limit: Int): List<Kline> {
-        // TODO: implement in iteration 3
-        return emptyList()
+        val rows = restClient.get()
+            .uri { builder ->
+                builder.path("/fapi/v1/klines")
+                    .queryParam("symbol", symbol)
+                    .queryParam("interval", candleInterval)
+                    .queryParam("limit", limit)
+                    .build()
+            }
+            .retrieve()
+            .body(object : ParameterizedTypeReference<List<JsonNode>>() {})
+            ?: emptyList()
+
+        return rows.map { it.toKline(symbol, exchangeName) }
     }
 }
