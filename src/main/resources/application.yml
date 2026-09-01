@@ -16,6 +16,12 @@ telegram:
   bot-username: ${TELEGRAM_BOT_USERNAME}
   chat-id: ${TELEGRAM_CHAT_ID}
 
+exchange:
+  binance:
+    base-url: https://fapi.binance.com
+  bybit:
+    base-url: https://api.bybit.com
+
 alerts:
   symbols:
     top-n: 20
