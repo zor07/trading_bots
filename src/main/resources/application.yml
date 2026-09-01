@@ -18,5 +18,12 @@ telegram:
 
 alerts:
   symbols:
-    - BTCUSDT
-    - ETHUSDT
+    top-n: 20
+    update-interval: 24h
+  price:
+    interval: 60s
+    candle-interval: 15m
+    candle-limit: 3
+    threshold: 2.5
+    cooldown: 30m
+    debug-mode: true
