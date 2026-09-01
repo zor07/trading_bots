@@ -1,7 +1,7 @@
 package com.zor07.tradingbot.alert
 
 import com.zor07.tradingbot.bot.AlertBot
-import com.zor07.tradingbot.config.properties.TelegramProperties
+import com.zor07.tradingbot.user.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
@@ -9,17 +9,23 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 @Service
 class AlertNotifier(
     private val bot: AlertBot,
-    private val telegramProperties: TelegramProperties
+    private val userService: UserService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     fun send(message: String) {
-        log.info("Sending alert: {}", message)
-        val sendMessage = SendMessage().apply {
-            chatId = telegramProperties.chatId
-            text = message
+        val chatIds = userService.getChatIds()
+        if (chatIds.isEmpty()) {
+            log.warn("No subscribers, alert not sent: {}", message)
+            return
         }
-        bot.execute(sendMessage)
+        chatIds.forEach { chatId ->
+            runCatching {
+                bot.execute(SendMessage(chatId.toString(), message))
+            }.onFailure {
+                log.error("Failed to send alert to chatId={}: {}", chatId, it.message)
+            }
+        }
     }
 }

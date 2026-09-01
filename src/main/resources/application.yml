@@ -14,7 +14,6 @@ spring:
 telegram:
   bot-token: ${TELEGRAM_BOT_TOKEN}
   bot-username: ${TELEGRAM_BOT_USERNAME}
-  chat-id: ${TELEGRAM_CHAT_ID}
 
 exchange:
   binance:
