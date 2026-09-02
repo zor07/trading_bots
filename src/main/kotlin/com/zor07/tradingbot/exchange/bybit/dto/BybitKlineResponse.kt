@@ -10,7 +10,7 @@ data class BybitKlineResponse(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class BybitKlineResult(
-    val symbol: String,
+    val symbol: String? = null,
     // Each entry: [startTime, open, high, low, close, volume, turnover]
-    val list: List<List<String>>
+    val list: List<List<String>> = emptyList()
 )

@@ -23,12 +23,12 @@ exchange:
 
 alerts:
   symbols:
-    top-n: 20
-    update-interval: 24h
+    top-n: 50
+    update-interval: PT3H
   price:
-    interval: 60s
+    interval: PT30S
     candle-interval: 15m
-    candle-limit: 3
-    threshold: 2.5
+    candle-limit: 1
+    threshold: 0.5
     cooldown: 30m
     debug-mode: true

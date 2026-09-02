@@ -22,7 +22,7 @@ class SymbolService(
         refresh()
     }
 
-    @Scheduled(fixedDelayString = "#{@symbolsProperties.updateInterval.toMillis()}")
+    @Scheduled(fixedDelayString = "\${alerts.symbols.update-interval}")
     fun refresh() {
         log.info("Refreshing top {} symbols by volume", properties.topN)
         symbols = symbolProvider.getTopSymbolsByVolume(properties.topN)
