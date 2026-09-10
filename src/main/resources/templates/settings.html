@@ -48,12 +48,6 @@
                                th:value="${priceSettings.candleLimit}">
                         <div class="form-text">За сколько свечей считать движение. 1 — движение внутри текущей свечи. 3 при интервале 15m — движение за последние 45 минут.</div>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label fw-semibold">Cooldown (минуты)</label>
-                        <input type="number" name="cooldownMinutes" class="form-control" min="1"
-                               th:value="${priceSettings.cooldownMinutes}">
-                        <div class="form-text">Пауза между повторными алертами по одной монете. Например, 30 — если по BTCUSDT уже был алерт, следующий придёт не раньше чем через 30 минут.</div>
-                    </div>
                 </div>
 
                 <!-- Excluded symbols -->

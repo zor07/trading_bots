@@ -5,6 +5,5 @@ data class PriceAlertSettings(
     val threshold: Double,
     val candleInterval: String,
     val candleLimit: Int,
-    val cooldownMinutes: Int,
     val excludedSymbols: List<String> = emptyList()
 )

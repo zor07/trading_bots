@@ -39,5 +39,4 @@ alerts:
     candle-interval: 15m
     candle-limit: 1
     threshold: 0.5
-    cooldown: 30m
-    debug-mode: true
+

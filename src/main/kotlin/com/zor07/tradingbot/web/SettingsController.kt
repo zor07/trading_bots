@@ -38,7 +38,6 @@ class SettingsController(
         @RequestParam threshold: Double,
         @RequestParam candleInterval: String,
         @RequestParam candleLimit: Int,
-        @RequestParam cooldownMinutes: Int,
         @RequestParam(required = false) excludedSymbols: List<String>?
     ): String {
         SessionUtils.getUserId(session) ?: return "redirect:/login"
@@ -47,7 +46,6 @@ class SettingsController(
             threshold = threshold,
             candleInterval = candleInterval,
             candleLimit = candleLimit,
-            cooldownMinutes = cooldownMinutes,
             excludedSymbols = excludedSymbols ?: emptyList()
         )
         settingsService.savePriceSettings(settings)

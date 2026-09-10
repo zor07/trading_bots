@@ -58,7 +58,7 @@ class PriceAlertScheduler(
 
             if (abs(avgChange) >= settings.threshold) {
                 log.info("ALERT triggered: {} change={}% threshold={}%", symbol, String.format("%.2f", avgChange), settings.threshold)
-                alertService.handle(symbol, avgChange, settings.cooldownMinutes)
+                alertService.handle(symbol, avgChange)
             }
         }
     }

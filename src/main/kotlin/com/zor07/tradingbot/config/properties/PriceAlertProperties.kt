@@ -8,7 +8,5 @@ data class PriceAlertProperties(
     val interval: Duration = Duration.ofSeconds(60),
     val candleInterval: String = "15m",
     val candleLimit: Int = 3,
-    val threshold: Double = 2.5,
-    val cooldown: Duration = Duration.ofMinutes(30),
-    val debugMode: Boolean = true
+    val threshold: Double = 2.5
 )

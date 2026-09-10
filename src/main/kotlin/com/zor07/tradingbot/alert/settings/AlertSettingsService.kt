@@ -19,8 +19,7 @@ class AlertSettingsService(
             ?: return PriceAlertSettings(
                 threshold = properties.threshold,
                 candleInterval = properties.candleInterval,
-                candleLimit = properties.candleLimit,
-                cooldownMinutes = properties.cooldown.toMinutes().toInt()
+                candleLimit = properties.candleLimit
             )
         return objectMapper.readValue(entity.settings)
     }
