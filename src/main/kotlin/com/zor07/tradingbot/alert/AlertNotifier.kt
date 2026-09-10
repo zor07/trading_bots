@@ -23,7 +23,7 @@ class AlertNotifier(
         log.info("Sending alert to {} subscribers: {}", chatIds.size, message)
         chatIds.forEach { chatId ->
             runCatching {
-                bot.execute(SendMessage(chatId.toString(), message))
+                bot.execute(SendMessage(chatId.toString(), message).also { it.disableWebPagePreview = true })
                 log.info("Alert sent to chatId={}", chatId)
             }.onFailure {
                 log.error("Failed to send alert to chatId={}: {}", chatId, it.message)
