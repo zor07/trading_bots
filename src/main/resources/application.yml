@@ -31,6 +31,9 @@ exchange:
     base-url: https://api.bybit.com
 
 alerts:
+  lsr:
+    account-threshold: 5.0
+    position-threshold: 5.0
   symbols:
     top-n: 50
     update-interval: PT3H

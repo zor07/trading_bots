@@ -71,6 +71,40 @@
             </div>
         </div>
 
+        <!-- Long/Short Ratio Alert -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>Long/Short Ratio</strong>
+                    <div class="text-muted small mt-1">Long/Short Ratio — соотношение количества трейдеров (или объёма позиций) у которых открыт лонг vs шорт по инструменту. Смысл для алертов: когда соотношение резко смещается в одну сторону — это сигнал о возможном развороте.</div>
+                </div>
+                <div class="form-check form-switch mb-0 ms-3 flex-shrink-0">
+                    <input class="form-check-input" type="checkbox" name="lsrEnabled" id="lsrEnabled"
+                           th:checked="${lsrSettings.enabled}">
+                    <label class="form-check-label" for="lsrEnabled">Включён</label>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">Бот отслеживает два показателя одновременно и шлёт алерт когда оба сигналят в одну сторону:</p>
+                <p class="small mb-1"><strong>По аккаунтам (Top Trader Accounts):</strong> процент трейдеров у которых открыт лонг vs шорт. Например, 60% трейдеров в лонге. Показывает настроение толпы — контрариантный сигнал. Но 1 крупный игрок = 1 голос, размер позиции не учитывается.</p>
+                <p class="small mb-3"><strong>По позициям (Top Trader Positions):</strong> то же самое но взвешено по объёму позиций. Крупный игрок с $10M позицией весит больше чем мелкий с $1k. Показывает куда реально смотрят деньги умных денег.</p>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label class="form-label fw-semibold">Порог по аккаунтам (%)</label>
+                        <input type="number" name="lsrAccountThreshold" class="form-control" step="0.1" min="0.1"
+                               th:value="${lsrSettings.accountThreshold}">
+                        <div class="form-text">На сколько процентов должна измениться доля лонгов за тик чтобы сработал алерт. Например, 5 — алерт придёт если доля лонгов выросла или упала на 5% и более.</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-semibold">Порог по позициям (%)</label>
+                        <input type="number" name="lsrPositionThreshold" class="form-control" step="0.1" min="0.1"
+                               th:value="${lsrSettings.positionThreshold}">
+                        <div class="form-text">То же самое но для показателя взвешенного по объёму позиций.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary w-100">Сохранить</button>
     </form>
 </div>

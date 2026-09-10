@@ -2,6 +2,7 @@ package com.zor07.tradingbot
 
 import com.zor07.tradingbot.config.properties.AppProperties
 import com.zor07.tradingbot.config.properties.ExchangeProperties
+import com.zor07.tradingbot.config.properties.LongShortRatioProperties
 import com.zor07.tradingbot.config.properties.PriceAlertProperties
 import com.zor07.tradingbot.config.properties.SymbolsProperties
 import com.zor07.tradingbot.config.properties.TelegramProperties
@@ -18,7 +19,8 @@ import org.springframework.scheduling.annotation.EnableScheduling
     TelegramProperties::class,
     ExchangeProperties::class,
     SymbolsProperties::class,
-    PriceAlertProperties::class
+    PriceAlertProperties::class,
+    LongShortRatioProperties::class
 )
 class TradingBotApplication
 

@@ -1,6 +1,7 @@
 package com.zor07.tradingbot.web
 
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
+import com.zor07.tradingbot.alert.settings.LongShortRatioSettings
 import com.zor07.tradingbot.alert.settings.PriceAlertSettings
 import com.zor07.tradingbot.exchange.SymbolService
 import jakarta.servlet.http.HttpSession
@@ -22,12 +23,14 @@ class SettingsController(
     fun settingsPage(session: HttpSession, model: Model): String {
         SessionUtils.getUserId(session) ?: return "redirect:/login"
         val priceSettings = settingsService.getPriceSettings()
+        val lsrSettings = settingsService.getLsrSettings()
         val allSymbols = symbolService.getSymbols()
 
         model.addAttribute("priceSettings", priceSettings)
         model.addAttribute("excludedSymbols", HashSet(priceSettings.excludedSymbols))
         model.addAttribute("allSymbols", allSymbols)
         model.addAttribute("candleIntervals", listOf("1m", "5m", "15m", "1h", "4h"))
+        model.addAttribute("lsrSettings", lsrSettings)
         return "settings"
     }
 
@@ -38,17 +41,27 @@ class SettingsController(
         @RequestParam threshold: Double,
         @RequestParam candleInterval: String,
         @RequestParam candleLimit: Int,
-        @RequestParam(required = false) excludedSymbols: List<String>?
+        @RequestParam(required = false) excludedSymbols: List<String>?,
+        @RequestParam lsrEnabled: Boolean = false,
+        @RequestParam lsrAccountThreshold: Double,
+        @RequestParam lsrPositionThreshold: Double
     ): String {
         SessionUtils.getUserId(session) ?: return "redirect:/login"
-        val settings = PriceAlertSettings(
+
+        settingsService.savePriceSettings(PriceAlertSettings(
             enabled = enabled,
             threshold = threshold,
             candleInterval = candleInterval,
             candleLimit = candleLimit,
             excludedSymbols = excludedSymbols ?: emptyList()
-        )
-        settingsService.savePriceSettings(settings)
+        ))
+
+        settingsService.saveLsrSettings(LongShortRatioSettings(
+            enabled = lsrEnabled,
+            accountThreshold = lsrAccountThreshold,
+            positionThreshold = lsrPositionThreshold
+        ))
+
         return "redirect:/settings"
     }
 }
