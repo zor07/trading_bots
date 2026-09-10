@@ -17,5 +17,8 @@ data class User(
     val username: String? = null,
 
     @Column(name = "subscribed_at", nullable = false)
-    val subscribedAt: Instant = Instant.now()
+    val subscribedAt: Instant = Instant.now(),
+
+    @Column(name = "auth_token", unique = true)
+    val authToken: String? = null
 )

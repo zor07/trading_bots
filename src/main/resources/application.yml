@@ -1,3 +1,6 @@
+app:
+  base-url: http://localhost:8080
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5437/tradingbot

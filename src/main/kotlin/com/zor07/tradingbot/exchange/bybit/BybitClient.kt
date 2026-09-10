@@ -3,6 +3,7 @@ package com.zor07.tradingbot.exchange.bybit
 import com.zor07.tradingbot.exchange.ExchangeClient
 import com.zor07.tradingbot.exchange.bybit.dto.BybitKlineResponse
 import com.zor07.tradingbot.exchange.model.Kline
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
@@ -13,6 +14,8 @@ import java.time.Instant
 class BybitClient(
     @Qualifier("bybitRestClient") private val restClient: RestClient
 ) : ExchangeClient {
+
+    private val log = LoggerFactory.getLogger(javaClass)
 
     override val exchangeName: String = "BYBIT"
 
@@ -30,18 +33,25 @@ class BybitClient(
             .body(BybitKlineResponse::class.java)
             ?: return emptyList()
 
+        if (response.retCode != 0) {
+            log.warn("Bybit returned error retCode={} for symbol={}", response.retCode, symbol)
+            return emptyList()
+        }
+
+        val intervalMillis = intervalToMillis(candleInterval)
         return response.result.list.map { row ->
             // row: [startTime, open, high, low, close, volume, turnover]
+            val openTime = Instant.ofEpochMilli(row[0].toLong())
             Kline(
                 symbol = symbol,
                 exchange = exchangeName,
-                openTime = Instant.ofEpochMilli(row[0].toLong()),
+                openTime = openTime,
                 open = BigDecimal(row[1]),
                 high = BigDecimal(row[2]),
                 low = BigDecimal(row[3]),
                 close = BigDecimal(row[4]),
                 volume = BigDecimal(row[5]),
-                closeTime = Instant.ofEpochMilli(row[0].toLong())
+                closeTime = openTime.plusMillis(intervalMillis)
             )
         }
     }
@@ -59,5 +69,20 @@ class BybitClient(
         "12h" -> "720"
         "1d"  -> "D"
         else  -> candleInterval
+    }
+
+    private fun intervalToMillis(candleInterval: String): Long = when (candleInterval) {
+        "1m"  -> 60_000L
+        "3m"  -> 180_000L
+        "5m"  -> 300_000L
+        "15m" -> 900_000L
+        "30m" -> 1_800_000L
+        "1h"  -> 3_600_000L
+        "2h"  -> 7_200_000L
+        "4h"  -> 14_400_000L
+        "6h"  -> 21_600_000L
+        "12h" -> 43_200_000L
+        "1d"  -> 86_400_000L
+        else  -> 60_000L
     }
 }

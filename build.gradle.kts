@@ -28,6 +28,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.telegram:telegrambots:6.9.7.1")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     runtimeOnly("org.postgresql:postgresql")
 
