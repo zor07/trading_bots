@@ -46,11 +46,13 @@ class AlertBot(
         userService.subscribe(chatId, username)
         val token = userService.generateToken(chatId)
         val link = "${appProperties.baseUrl}/trading-bots/login?token=$token"
-        val button = InlineKeyboardButton("⚙️ Настройки алертов").also { it.url = link }
-        val keyboard = InlineKeyboardMarkup(listOf(listOf(button)))
-        execute(SendMessage(chatId.toString(), "Добро пожаловать!").also {
-            it.replyMarkup = keyboard
+        val isLocal = appProperties.baseUrl.contains("localhost")
+        execute(SendMessage(chatId.toString(), if (isLocal) "Добро пожаловать!\n\n$link" else "Добро пожаловать!").also {
             it.disableWebPagePreview = true
+            if (!isLocal) {
+                val button = InlineKeyboardButton("⚙️ Настройки алертов").also { btn -> btn.url = link }
+                it.replyMarkup = InlineKeyboardMarkup(listOf(listOf(button)))
+            }
         })
     }
 }
