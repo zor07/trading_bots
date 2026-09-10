@@ -5,6 +5,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.zor07.tradingbot.alert.model.AlertType
 import com.zor07.tradingbot.config.properties.LongShortRatioProperties
 import com.zor07.tradingbot.config.properties.PriceAlertProperties
+import com.zor07.tradingbot.config.properties.SymbolsProperties
+import com.zor07.tradingbot.exchange.SymbolProvider
 import org.springframework.stereotype.Service
 import java.time.Instant
 
@@ -13,7 +15,9 @@ class AlertSettingsService(
     private val repository: AlertSettingsRepository,
     private val objectMapper: ObjectMapper,
     private val priceAlertProperties: PriceAlertProperties,
-    private val lsrProperties: LongShortRatioProperties
+    private val lsrProperties: LongShortRatioProperties,
+    private val symbolsProperties: SymbolsProperties,
+    private val symbolProvider: SymbolProvider
 ) {
 
     fun getPriceSettings(): PriceAlertSettings {
@@ -41,6 +45,16 @@ class AlertSettingsService(
 
     fun saveLsrSettings(settings: LongShortRatioSettings) {
         save(AlertType.LONG_SHORT_RATIO.name, settings)
+    }
+
+    fun getWatchlist(): List<String> {
+        val entity = repository.findByAlertType(AlertType.SYMBOL_WATCHLIST.name)
+            ?: return symbolProvider.getTopSymbolsByVolume(symbolsProperties.topN)
+        return objectMapper.readValue<SymbolWatchlistSettings>(entity.settings).symbols
+    }
+
+    fun saveWatchlist(symbols: List<String>) {
+        save(AlertType.SYMBOL_WATCHLIST.name, SymbolWatchlistSettings(symbols))
     }
 
     private fun save(alertType: String, settings: Any) {

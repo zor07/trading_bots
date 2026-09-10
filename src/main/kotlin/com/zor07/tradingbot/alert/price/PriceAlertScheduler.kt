@@ -2,7 +2,6 @@ package com.zor07.tradingbot.alert.price
 
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
 import com.zor07.tradingbot.exchange.ExchangeClient
-import com.zor07.tradingbot.exchange.SymbolService
 import com.zor07.tradingbot.user.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -12,7 +11,6 @@ import kotlin.math.abs
 @Component
 class PriceAlertScheduler(
     private val exchangeClients: List<ExchangeClient>,
-    private val symbolService: SymbolService,
     private val detector: PriceAlertDetector,
     private val alertService: PriceAlertService,
     private val userService: UserService,
@@ -24,7 +22,7 @@ class PriceAlertScheduler(
     @Scheduled(fixedDelayString = "\${alerts.price.interval}")
     fun run() {
         val settings = settingsService.getPriceSettings()
-        val symbols = symbolService.getSymbols()
+        val symbols = settingsService.getWatchlist()
         val subscriberCount = userService.getChatIds().size
 
         log.info("Price alert tick: {} symbols, {} exchanges, {} subscribers", symbols.size, exchangeClients.size, subscriberCount)
@@ -40,8 +38,6 @@ class PriceAlertScheduler(
         }
 
         for (symbol in symbols) {
-            if (settings.excludedSymbols.contains(symbol)) continue
-
             val changes = exchangeClients.mapNotNull { client ->
                 runCatching {
                     val klines = client.getKlines(symbol, settings.candleInterval, settings.candleLimit)

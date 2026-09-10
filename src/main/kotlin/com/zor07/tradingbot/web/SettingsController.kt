@@ -3,7 +3,6 @@ package com.zor07.tradingbot.web
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
 import com.zor07.tradingbot.alert.settings.LongShortRatioSettings
 import com.zor07.tradingbot.alert.settings.PriceAlertSettings
-import com.zor07.tradingbot.exchange.SymbolService
 import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -15,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 @RequestMapping("/settings")
 class SettingsController(
-    private val settingsService: AlertSettingsService,
-    private val symbolService: SymbolService
+    private val settingsService: AlertSettingsService
 ) {
 
     @GetMapping
@@ -24,13 +22,11 @@ class SettingsController(
         SessionUtils.getUserId(session) ?: return "redirect:/login"
         val priceSettings = settingsService.getPriceSettings()
         val lsrSettings = settingsService.getLsrSettings()
-        val allSymbols = symbolService.getSymbols()
 
         model.addAttribute("priceSettings", priceSettings)
-        model.addAttribute("excludedSymbols", HashSet(priceSettings.excludedSymbols))
-        model.addAttribute("allSymbols", allSymbols)
         model.addAttribute("candleIntervals", listOf("1m", "5m", "15m", "1h", "4h"))
         model.addAttribute("lsrSettings", lsrSettings)
+        model.addAttribute("watchlistCount", settingsService.getWatchlist().size)
         return "settings"
     }
 
@@ -41,7 +37,6 @@ class SettingsController(
         @RequestParam threshold: Double,
         @RequestParam candleInterval: String,
         @RequestParam candleLimit: Int,
-        @RequestParam(required = false) excludedSymbols: List<String>?,
         @RequestParam lsrEnabled: Boolean = false,
         @RequestParam lsrAccountThreshold: Double,
         @RequestParam lsrPositionThreshold: Double
@@ -52,8 +47,7 @@ class SettingsController(
             enabled = enabled,
             threshold = threshold,
             candleInterval = candleInterval,
-            candleLimit = candleLimit,
-            excludedSymbols = excludedSymbols ?: emptyList()
+            candleLimit = candleLimit
         ))
 
         settingsService.saveLsrSettings(LongShortRatioSettings(

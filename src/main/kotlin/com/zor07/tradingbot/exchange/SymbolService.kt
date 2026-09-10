@@ -30,4 +30,6 @@ class SymbolService(
     }
 
     fun getSymbols(): List<String> = symbols
+
+    fun getAllSymbols(): List<String> = symbolProvider.getTopSymbolsByVolume(Int.MAX_VALUE)
 }
