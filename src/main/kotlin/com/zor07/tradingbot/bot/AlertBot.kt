@@ -45,7 +45,7 @@ class AlertBot(
     private fun handleStart(chatId: Long, username: String?) {
         userService.subscribe(chatId, username)
         val token = userService.generateToken(chatId)
-        val link = "${appProperties.baseUrl}/trading-bots/login?token=$token"
+        val link = "${appProperties.baseUrl}/login?token=$token"
         val isLocal = appProperties.baseUrl.contains("localhost")
         execute(SendMessage(chatId.toString(), if (isLocal) "Добро пожаловать!\n\n$link" else "Добро пожаловать!").also {
             it.disableWebPagePreview = true
