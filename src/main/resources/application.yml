@@ -1,6 +1,10 @@
 app:
   base-url: http://localhost:8080
 
+server:
+  servlet:
+    context-path: /trading-bots
+
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5437}/${DB_NAME:tradingbot}
