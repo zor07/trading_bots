@@ -3,7 +3,7 @@ app:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5437/tradingbot
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5437}/${DB_NAME:tradingbot}
     username: ${DB_USERNAME:tradingbot}
     password: ${DB_PASSWORD:tradingbot}
     driver-class-name: org.postgresql.Driver
