@@ -8,7 +8,7 @@ data class BybitLsrResponse(
 )
 
 data class BybitLsrResult(
-    @JsonProperty("list") val list: List<BybitLsrEntry>
+    @JsonProperty("list") val list: List<BybitLsrEntry>?
 )
 
 data class BybitLsrEntry(

@@ -46,7 +46,7 @@ class BybitClient(
         return try {
             val response = objectMapper.readValue(rawJson, BybitLsrResponse::class.java)
             if (response.retCode != 0) return null
-            response.result.list.firstOrNull()?.buyRatio?.toDoubleOrNull()?.times(100)
+            response.result.list?.firstOrNull()?.buyRatio?.toDoubleOrNull()?.times(100)
         } catch (e: Exception) {
             log.warn("Bybit LSR deserialization failed for {}, raw JSON: {}", symbol, rawJson)
             null
