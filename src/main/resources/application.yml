@@ -17,6 +17,8 @@ spring:
 telegram:
   bot-token: ${TELEGRAM_BOT_TOKEN}
   bot-username: ${TELEGRAM_BOT_USERNAME}
+  proxy-host: ${TELEGRAM_BOT_PROXY_HOST:}
+  proxy-port: ${TELEGRAM_BOT_PROXY_PORT:0}
 
 exchange:
   binance:
