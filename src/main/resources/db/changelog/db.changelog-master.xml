@@ -9,5 +9,6 @@
     <include file="db/changelog/v1/002_create_users.xml"/>
     <include file="db/changelog/v1/003_add_auth_token_to_users.xml"/>
     <include file="db/changelog/v1/004_create_user_alert_settings.xml"/>
+    <include file="db/changelog/v1/005_refactor_alert_settings_to_global.xml"/>
 
 </databaseChangeLog>

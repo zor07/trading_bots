@@ -8,6 +8,7 @@ import com.zor07.tradingbot.config.properties.PriceAlertProperties
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.time.Duration
 import java.time.Instant
 
 @Service
@@ -19,8 +20,8 @@ class PriceAlertService(
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    fun handle(symbol: String, changePercent: Double) {
-        if (!properties.debugMode && isCoolingDown(symbol)) {
+    fun handle(symbol: String, changePercent: Double, cooldownMinutes: Int) {
+        if (!properties.debugMode && isCoolingDown(symbol, cooldownMinutes)) {
             log.debug("Cooldown active for {}, skipping", symbol)
             return
         }
@@ -40,10 +41,10 @@ class PriceAlertService(
         )
     }
 
-    private fun isCoolingDown(symbol: String): Boolean {
+    private fun isCoolingDown(symbol: String, cooldownMinutes: Int): Boolean {
         val last = repository.findTopByAlertTypeAndSymbolOrderByCreatedAtDesc(
             AlertType.PRICE_MOVE.name, symbol
         ) ?: return false
-        return last.createdAt.isAfter(Instant.now().minus(properties.cooldown))
+        return last.createdAt.isAfter(Instant.now().minus(Duration.ofMinutes(cooldownMinutes.toLong())))
     }
 }

@@ -6,19 +6,13 @@ import org.hibernate.type.SqlTypes
 import java.time.Instant
 
 @Entity
-@Table(
-    name = "user_alert_settings",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "alert_type"])]
-)
+@Table(name = "alert_settings")
 data class UserAlertSettings(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @Column(name = "user_id", nullable = false)
-    val userId: Long,
-
-    @Column(name = "alert_type", nullable = false)
+    @Column(name = "alert_type", nullable = false, unique = true)
     val alertType: String,
 
     @JdbcTypeCode(SqlTypes.JSON)

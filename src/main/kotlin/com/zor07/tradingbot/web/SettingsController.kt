@@ -20,8 +20,8 @@ class SettingsController(
 
     @GetMapping
     fun settingsPage(session: HttpSession, model: Model): String {
-        val userId = SessionUtils.getUserId(session) ?: return "redirect:/login"
-        val priceSettings = settingsService.getPriceSettings(userId)
+        SessionUtils.getUserId(session) ?: return "redirect:/login"
+        val priceSettings = settingsService.getPriceSettings()
         val allSymbols = symbolService.getSymbols()
 
         model.addAttribute("priceSettings", priceSettings)
@@ -41,7 +41,7 @@ class SettingsController(
         @RequestParam cooldownMinutes: Int,
         @RequestParam(required = false) excludedSymbols: List<String>?
     ): String {
-        val userId = SessionUtils.getUserId(session) ?: return "redirect:/login"
+        SessionUtils.getUserId(session) ?: return "redirect:/login"
         val settings = PriceAlertUserSettings(
             enabled = enabled,
             threshold = threshold,
@@ -50,7 +50,7 @@ class SettingsController(
             cooldownMinutes = cooldownMinutes,
             excludedSymbols = excludedSymbols ?: emptyList()
         )
-        settingsService.savePriceSettings(userId, settings)
+        settingsService.savePriceSettings(settings)
         return "redirect:/settings"
     }
 }
