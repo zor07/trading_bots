@@ -9,7 +9,7 @@ import java.math.RoundingMode
 class PriceAlertDetector {
 
     fun computeChange(klines: List<Kline>): Double? {
-        if (klines.size < 2) return null
+        if (klines.isEmpty()) return null
         val open = klines.first().open
         val close = klines.last().close
         if (open.compareTo(BigDecimal.ZERO) == 0) return null
