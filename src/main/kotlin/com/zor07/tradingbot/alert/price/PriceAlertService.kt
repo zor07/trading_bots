@@ -27,7 +27,12 @@ class PriceAlertService(
         }
 
         val emoji = if (changePercent > 0) "🟢" else "🔴"
-        val message = "$emoji Price alert: $symbol ${String.format("%.2f", changePercent)}%"
+        val message = """
+            |$emoji Price alert: $symbol ${String.format("%.2f", changePercent)}%
+            |
+            |Bybit: https://www.bybit.com/ru-RU/trade/usdt/$symbol
+            |Coinglass: https://www.coinglass.com/tv/ru/Bybit_$symbol
+        """.trimMargin()
 
         notifier.send(message)
         repository.save(
