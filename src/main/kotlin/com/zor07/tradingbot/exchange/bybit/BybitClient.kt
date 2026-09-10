@@ -2,6 +2,8 @@ package com.zor07.tradingbot.exchange.bybit
 
 import com.zor07.tradingbot.exchange.ExchangeClient
 import com.zor07.tradingbot.exchange.bybit.dto.BybitKlineResponse
+import com.zor07.tradingbot.exchange.bybit.dto.BybitLsrResponse
+import com.zor07.tradingbot.exchange.lsr.LongShortRatioClient
 import com.zor07.tradingbot.exchange.model.Kline
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
@@ -13,11 +15,31 @@ import java.time.Instant
 @Component
 class BybitClient(
     @Qualifier("bybitRestClient") private val restClient: RestClient
-) : ExchangeClient {
+) : ExchangeClient, LongShortRatioClient {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
     override val exchangeName: String = "BYBIT"
+
+    override fun getLsrByAccounts(symbol: String): Double? {
+        val response = restClient.get()
+            .uri { builder ->
+                builder.path("/v5/market/account-ratio")
+                    .queryParam("category", "linear")
+                    .queryParam("symbol", symbol)
+                    .queryParam("period", "5min")
+                    .queryParam("limit", 1)
+                    .build()
+            }
+            .retrieve()
+            .body(BybitLsrResponse::class.java)
+            ?: return null
+        if (response.retCode != 0) return null
+        return response.result.list.firstOrNull()?.buyRatio?.toDoubleOrNull()?.times(100)
+    }
+
+    // Bybit v5 does not expose a separate top-trader positions ratio endpoint
+    override fun getLsrByPositions(symbol: String): Double? = null
 
     override fun getKlines(symbol: String, candleInterval: String, limit: Int): List<Kline> {
         val response = restClient.get()
