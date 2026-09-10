@@ -1,0 +1,46 @@
+Задача: Long/Short Ratio алерт
+
+Суть:
+Алерт срабатывает когда оба показателя (по аккаунтам и по позициям) одновременно
+резко изменились в одну сторону. Пороги для каждого показателя настраиваются отдельно.
+Настройки уже реализованы (LongShortRatioSettings, AlertSettingsService, форма).
+
+---
+
+Остаток реализации:
+
+1. API клиенты
+   Добавить методы в BinanceClient и BybitClient:
+   - getLongShortRatioByAccounts(symbol) — Top Trader Accounts ratio
+   - getLongShortRatioByPositions(symbol) — Top Trader Positions ratio
+   Возвращают долю лонгов (0..100) на текущий момент
+
+2. Модель данных
+   LongShortRatioSnapshot(symbol, accountLongRatio, positionLongRatio)
+   Хранить предыдущий снимок для сравнения (in-memory кэш в шедулере или детекторе)
+
+3. Детектор LongShortRatioDetector
+   Принимает текущий и предыдущий снимок
+   Вычисляет изменение по аккаунтам и по позициям
+   Возвращает LongShortRatioChange(accountDelta, positionDelta) или null если данных нет
+
+4. Шедулер LongShortRatioScheduler
+   Читает LongShortRatioSettings из AlertSettingsService
+   Если !settings.enabled — пропускает тик
+   Итерирует символы из watchlist
+   Для каждого символа получает данные с обеих бирж
+   Вызывает детектор
+   Если |accountDelta| >= accountThreshold И |positionDelta| >= positionThreshold
+   И оба дельта в одну сторону — триггерит алерт
+
+5. Сервис алертов LongShortRatioAlertService
+   handle(symbol, accountDelta, positionDelta)
+   Формирует сообщение и шлёт через AlertNotifier
+
+6. Формат сообщения
+   ⚖️ Long/Short Ratio: BTCUSDT
+   Аккаунты: +6.2% → лонги выросли
+   Позиции: +4.8% → лонги выросли
+
+   Bybit: https://www.bybit.com/ru-RU/trade/usdt/BTCUSDT
+   Coinglass: https://www.coinglass.com/tv/ru/Bybit_BTCUSDT

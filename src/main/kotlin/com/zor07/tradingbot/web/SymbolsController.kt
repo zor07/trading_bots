@@ -1,7 +1,7 @@
 package com.zor07.tradingbot.web
 
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
-import com.zor07.tradingbot.exchange.SymbolService
+import com.zor07.tradingbot.exchange.SymbolCacheService
 import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -13,16 +13,15 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 @RequestMapping("/settings/symbols")
 class SymbolsController(
-    private val symbolService: SymbolService,
+    private val symbolCacheService: SymbolCacheService,
     private val settingsService: AlertSettingsService
 ) {
 
     @GetMapping
     fun symbolsPage(session: HttpSession, model: Model): String {
         SessionUtils.getUserId(session) ?: return "redirect:/login"
-        val allSymbols = symbolService.getAllSymbols()
         val watchlist = settingsService.getWatchlist()
-        model.addAttribute("allSymbols", allSymbols)
+        model.addAttribute("allSymbols", symbolCacheService.getAll())
         model.addAttribute("watchlist", HashSet(watchlist))
         model.addAttribute("watchlistCount", watchlist.size)
         return "symbols"

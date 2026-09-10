@@ -35,7 +35,7 @@ class BybitClient(
             .body(BybitLsrResponse::class.java)
             ?: return null
         if (response.retCode != 0) return null
-        return response.result.list.firstOrNull()?.buyRatio?.toDoubleOrNull()?.times(100)
+        return response.result?.list?.firstOrNull()?.buyRatio?.toDoubleOrNull()?.times(100)
     }
 
     // Bybit v5 does not expose a separate top-trader positions ratio endpoint

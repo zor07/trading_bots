@@ -6,7 +6,7 @@ import com.zor07.tradingbot.alert.model.AlertType
 import com.zor07.tradingbot.config.properties.LongShortRatioProperties
 import com.zor07.tradingbot.config.properties.PriceAlertProperties
 import com.zor07.tradingbot.config.properties.SymbolsProperties
-import com.zor07.tradingbot.exchange.SymbolProvider
+import com.zor07.tradingbot.exchange.SymbolCacheService
 import org.springframework.stereotype.Service
 import java.time.Instant
 
@@ -17,7 +17,7 @@ class AlertSettingsService(
     private val priceAlertProperties: PriceAlertProperties,
     private val lsrProperties: LongShortRatioProperties,
     private val symbolsProperties: SymbolsProperties,
-    private val symbolProvider: SymbolProvider
+    private val symbolCacheService: SymbolCacheService
 ) {
 
     fun getPriceSettings(): PriceAlertSettings {
@@ -49,7 +49,7 @@ class AlertSettingsService(
 
     fun getWatchlist(): List<String> {
         val entity = repository.findByAlertType(AlertType.SYMBOL_WATCHLIST.name)
-            ?: return symbolProvider.getTopSymbolsByVolume(symbolsProperties.topN)
+            ?: return symbolCacheService.getTopSymbols(symbolsProperties.topN)
         return objectMapper.readValue<SymbolWatchlistSettings>(entity.settings).symbols
     }
 

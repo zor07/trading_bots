@@ -19,27 +19,36 @@
         </div>
     </div>
 
-    <div class="mb-3">
-        <span class="text-muted small me-2">Выбрать блок:</span>
-        <span id="blockButtons"></span>
-        <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="clearAll()">Сбросить всё</button>
+    <div class="mb-3 d-flex align-items-center gap-3">
+        <div>
+            <span class="text-muted small me-2">Выбрать блок:</span>
+            <span id="blockButtons"></span>
+            <button type="button" class="btn btn-sm btn-outline-danger ms-2" onclick="clearAll()">Сбросить всё</button>
+        </div>
+        <div class="form-check form-switch mb-0 ms-auto">
+            <input class="form-check-input" type="checkbox" id="lsrFilter" onchange="applyFilter()">
+            <label class="form-check-label small" for="lsrFilter">Только с LSR</label>
+        </div>
     </div>
 
     <form method="post" th:action="@{/settings/symbols}" id="symbolsForm">
         <div class="card shadow-sm mb-3">
             <div class="card-body">
-                <div class="row row-cols-3 g-2">
-                    <div class="col" th:each="symbol, iter : ${allSymbols}">
+                <div class="row row-cols-3 g-2" id="symbolsGrid">
+                    <div class="col symbol-item"
+                         th:each="info, iter : ${allSymbols}"
+                         th:attr="data-has-lsr=${info.hasLsr}">
                         <div class="form-check">
                             <input class="form-check-input symbol-checkbox" type="checkbox"
                                    name="symbols"
-                                   th:value="${symbol}"
-                                   th:id="${'s_' + symbol}"
+                                   th:value="${info.symbol}"
+                                   th:id="${'s_' + info.symbol}"
                                    th:attr="data-index=${iter.index}"
-                                   th:checked="${watchlist.contains(symbol)}">
-                            <label class="form-check-label small" th:for="${'s_' + symbol}">
+                                   th:checked="${watchlist.contains(info.symbol)}">
+                            <label class="form-check-label small" th:for="${'s_' + info.symbol}">
                                 <span class="text-muted me-1" th:text="${iter.index + 1} + '.'"></span>
-                                <span th:text="${symbol}"></span>
+                                <span th:text="${info.symbol}"></span>
+                                <span th:if="${info.hasLsr}" class="text-success ms-1" title="Есть LSR">⚖️</span>
                             </label>
                         </div>
                     </div>
@@ -55,34 +64,57 @@
     const BLOCK_SIZE = 50;
     const MAX_SELECTED = 50;
 
-    const checkboxes = Array.from(document.querySelectorAll('.symbol-checkbox'));
+    const allItems = Array.from(document.querySelectorAll('.symbol-item'));
     const counter = document.getElementById('counter');
     const blockButtons = document.getElementById('blockButtons');
 
+    function visibleCheckboxes() {
+        return allItems
+            .filter(item => item.style.display !== 'none')
+            .map(item => item.querySelector('.symbol-checkbox'));
+    }
+
+    function allCheckboxes() {
+        return Array.from(document.querySelectorAll('.symbol-checkbox'));
+    }
+
     function updateCounter() {
-        const selected = checkboxes.filter(cb => cb.checked).length;
+        const selected = allCheckboxes().filter(cb => cb.checked).length;
         counter.textContent = 'выбрано ' + selected + ' из ' + MAX_SELECTED;
         counter.className = 'fw-semibold' + (selected >= MAX_SELECTED ? ' text-danger' : '');
     }
 
     function selectBlock(blockIndex) {
+        const visible = visibleCheckboxes();
         const start = blockIndex * BLOCK_SIZE;
         const end = start + BLOCK_SIZE;
-        checkboxes.forEach(cb => cb.checked = false);
-        checkboxes.slice(start, end).forEach(cb => cb.checked = true);
+        allCheckboxes().forEach(cb => cb.checked = false);
+        visible.slice(start, end).forEach(cb => cb.checked = true);
         updateCounter();
     }
 
     function clearAll() {
-        checkboxes.forEach(cb => cb.checked = false);
+        allCheckboxes().forEach(cb => cb.checked = false);
+        updateCounter();
+    }
+
+    function applyFilter() {
+        const lsrOnly = document.getElementById('lsrFilter').checked;
+        allItems.forEach(item => {
+            const hasLsr = item.getAttribute('data-has-lsr') === 'true';
+            item.style.display = (lsrOnly && !hasLsr) ? 'none' : '';
+        });
+        renderBlockButtons();
         updateCounter();
     }
 
     function renderBlockButtons() {
-        const totalBlocks = Math.ceil(checkboxes.length / BLOCK_SIZE);
+        blockButtons.innerHTML = '';
+        const visible = visibleCheckboxes();
+        const totalBlocks = Math.ceil(visible.length / BLOCK_SIZE);
         for (let i = 0; i < totalBlocks; i++) {
             const start = i * BLOCK_SIZE + 1;
-            const end = Math.min((i + 1) * BLOCK_SIZE, checkboxes.length);
+            const end = Math.min((i + 1) * BLOCK_SIZE, visible.length);
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'btn btn-sm btn-outline-primary me-1';
@@ -92,9 +124,9 @@
         }
     }
 
-    checkboxes.forEach(cb => {
+    allCheckboxes().forEach(cb => {
         cb.addEventListener('change', function () {
-            const selected = checkboxes.filter(c => c.checked).length;
+            const selected = allCheckboxes().filter(c => c.checked).length;
             if (selected > MAX_SELECTED) {
                 this.checked = false;
             }
