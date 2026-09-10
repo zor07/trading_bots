@@ -34,7 +34,7 @@ alerts:
   lsr:
     account-threshold: 5.0
     position-threshold: 5.0
-    interval: PT5M
+    interval: PT30S
   symbols:
     top-n: 50
     update-interval: PT3H

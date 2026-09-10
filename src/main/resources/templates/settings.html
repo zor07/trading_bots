@@ -89,6 +89,18 @@
                         <div class="form-text">То же самое но для показателя взвешенного по объёму позиций.</div>
                     </div>
                 </div>
+
+                <div class="mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="lsrRequireBoth" id="requireBoth"
+                               th:checked="${lsrSettings.requireBoth}">
+                        <label class="form-check-label fw-semibold" for="requireBoth">Требовать оба сигнала</label>
+                    </div>
+                    <div class="form-text">
+                        <strong>Включено:</strong> алерт приходит только когда оба показателя (по аккаунтам и по позициям) одновременно превысили порог в одну сторону. Меньше сигналов, выше точность.<br>
+                        <strong>Выключено:</strong> алерт приходит если хотя бы один из показателей превысил порог. Больше сигналов, возможен шум.
+                    </div>
+                </div>
             </div>
         </div>
 

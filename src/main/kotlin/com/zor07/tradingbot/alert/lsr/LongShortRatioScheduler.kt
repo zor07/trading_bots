@@ -83,8 +83,13 @@ class LongShortRatioScheduler(
             val accountTriggered = abs(change.accountDelta) >= settings.accountThreshold
             val positionTriggered = abs(change.positionDelta) >= settings.positionThreshold
             val sameDirection = change.accountDelta.sign == change.positionDelta.sign
+            val triggered = if (settings.requireBoth) {
+                accountTriggered && positionTriggered && sameDirection
+            } else {
+                accountTriggered || positionTriggered
+            }
 
-            if (accountTriggered && positionTriggered && sameDirection) {
+            if (triggered) {
                 log.info("LSR ALERT triggered: {} accountDelta={}% positionDelta={}%",
                     symbol,
                     String.format("%.2f", change.accountDelta),

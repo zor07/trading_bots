@@ -39,7 +39,8 @@ class SettingsController(
         @RequestParam candleLimit: Int,
         @RequestParam lsrEnabled: Boolean = false,
         @RequestParam lsrAccountThreshold: Double,
-        @RequestParam lsrPositionThreshold: Double
+        @RequestParam lsrPositionThreshold: Double,
+        @RequestParam lsrRequireBoth: Boolean = false
     ): String {
         SessionUtils.getUserId(session) ?: return "redirect:/login"
 
@@ -53,7 +54,8 @@ class SettingsController(
         settingsService.saveLsrSettings(LongShortRatioSettings(
             enabled = lsrEnabled,
             accountThreshold = lsrAccountThreshold,
-            positionThreshold = lsrPositionThreshold
+            positionThreshold = lsrPositionThreshold,
+            requireBoth = lsrRequireBoth
         ))
 
         return "redirect:/settings"
