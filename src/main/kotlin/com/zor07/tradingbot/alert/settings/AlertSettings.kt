@@ -1,4 +1,4 @@
-package com.zor07.tradingbot.user.alert
+package com.zor07.tradingbot.alert.settings
 
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
@@ -7,7 +7,7 @@ import java.time.Instant
 
 @Entity
 @Table(name = "alert_settings")
-data class UserAlertSettings(
+data class AlertSettings(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,

@@ -1,10 +1,9 @@
 package com.zor07.tradingbot.alert.price
 
-import com.zor07.tradingbot.config.properties.PriceAlertProperties
+import com.zor07.tradingbot.alert.settings.AlertSettingsService
 import com.zor07.tradingbot.exchange.ExchangeClient
 import com.zor07.tradingbot.exchange.SymbolService
 import com.zor07.tradingbot.user.UserService
-import com.zor07.tradingbot.user.alert.UserAlertSettingsService
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -17,8 +16,7 @@ class PriceAlertScheduler(
     private val detector: PriceAlertDetector,
     private val alertService: PriceAlertService,
     private val userService: UserService,
-    private val settingsService: UserAlertSettingsService,
-    private val properties: PriceAlertProperties
+    private val settingsService: AlertSettingsService
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
@@ -41,17 +39,12 @@ class PriceAlertScheduler(
             return
         }
 
-        val candleInterval = settings.candleInterval
-        val candleLimit = settings.candleLimit
-        val threshold = settings.threshold
-        val cooldownMinutes = settings.cooldownMinutes
-
         for (symbol in symbols) {
             if (settings.excludedSymbols.contains(symbol)) continue
 
             val changes = exchangeClients.mapNotNull { client ->
                 runCatching {
-                    val klines = client.getKlines(symbol, candleInterval, candleLimit)
+                    val klines = client.getKlines(symbol, settings.candleInterval, settings.candleLimit)
                     detector.computeChange(klines)
                 }.onFailure {
                     log.warn("Failed to get klines for {} from {}: {}", symbol, client.exchangeName, it.message)
@@ -63,9 +56,9 @@ class PriceAlertScheduler(
             val avgChange = changes.average()
             log.info("{} avgChange={}%", symbol, String.format("%.2f", avgChange))
 
-            if (abs(avgChange) >= threshold) {
-                log.info("ALERT triggered: {} change={}% threshold={}%", symbol, String.format("%.2f", avgChange), threshold)
-                alertService.handle(symbol, avgChange, cooldownMinutes)
+            if (abs(avgChange) >= settings.threshold) {
+                log.info("ALERT triggered: {} change={}% threshold={}%", symbol, String.format("%.2f", avgChange), settings.threshold)
+                alertService.handle(symbol, avgChange, settings.cooldownMinutes)
             }
         }
     }

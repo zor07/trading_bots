@@ -1,8 +1,8 @@
 package com.zor07.tradingbot.web
 
+import com.zor07.tradingbot.alert.settings.AlertSettingsService
+import com.zor07.tradingbot.alert.settings.PriceAlertSettings
 import com.zor07.tradingbot.exchange.SymbolService
-import com.zor07.tradingbot.user.alert.UserAlertSettingsService
-import com.zor07.tradingbot.user.alert.settings.PriceAlertUserSettings
 import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 @RequestMapping("/settings")
 class SettingsController(
-    private val settingsService: UserAlertSettingsService,
+    private val settingsService: AlertSettingsService,
     private val symbolService: SymbolService
 ) {
 
@@ -42,7 +42,7 @@ class SettingsController(
         @RequestParam(required = false) excludedSymbols: List<String>?
     ): String {
         SessionUtils.getUserId(session) ?: return "redirect:/login"
-        val settings = PriceAlertUserSettings(
+        val settings = PriceAlertSettings(
             enabled = enabled,
             threshold = threshold,
             candleInterval = candleInterval,
