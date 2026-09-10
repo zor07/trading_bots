@@ -1,9 +1,9 @@
 app:
-  base-url: ${APP_BASE_URL:http://localhost:8080}
+  base-url: http://localhost:8080
 
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5437/tradingbot}
+    url: jdbc:postgresql://localhost:5437/tradingbot
     username: ${DB_USERNAME:tradingbot}
     password: ${DB_PASSWORD:tradingbot}
     driver-class-name: org.postgresql.Driver
