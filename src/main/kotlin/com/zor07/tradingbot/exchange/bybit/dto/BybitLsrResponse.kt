@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class BybitLsrResponse(
     @JsonProperty("retCode") val retCode: Int,
-    @JsonProperty("result") val result: BybitLsrResult?
+    @JsonProperty("result") val result: BybitLsrResult
 )
 
 data class BybitLsrResult(
-    @JsonProperty("list") val list: List<BybitLsrEntry>?
+    @JsonProperty("list") val list: List<BybitLsrEntry>
 )
 
 data class BybitLsrEntry(
