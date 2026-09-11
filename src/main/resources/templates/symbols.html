@@ -14,8 +14,8 @@
 
     <div class="card shadow-sm mb-3">
         <div class="card-body py-2 d-flex justify-content-between align-items-center">
-            <span class="text-muted small">Выберите до 50 символов. Если ничего не выбрано — используется топ 50 по объёму.</span>
-            <span class="fw-semibold" id="counter">выбрано 0 из 50</span>
+            <span class="text-muted small">Выберите до <span th:text="${symbolsLimit}"></span> символов. Если ничего не выбрано — используется топ <span th:text="${symbolsLimit}"></span> по объёму.</span>
+            <span class="fw-semibold" id="counter">выбрано 0 из <span th:text="${symbolsLimit}"></span></span>
         </div>
     </div>
 
@@ -52,8 +52,8 @@
 </div>
 
 <script>
-    const BLOCK_SIZE = 50;
-    const MAX_SELECTED = 50;
+    const BLOCK_SIZE = /*[[${symbolsLimit}]]*/ 100;
+    const MAX_SELECTED = /*[[${symbolsLimit}]]*/ 100;
 
     const checkboxes = Array.from(document.querySelectorAll('.symbol-checkbox'));
     const counter = document.getElementById('counter');

@@ -6,8 +6,10 @@ import com.zor07.tradingbot.user.UserService
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.bots.DefaultBotOptions
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 
@@ -33,6 +35,10 @@ class AlertBot(
     private val username = properties.botUsername
 
     override fun getBotUsername(): String = username
+
+    override fun onRegister() {
+        execute(SetMyCommands(listOf(BotCommand("start", "Подписаться и получить ссылку на настройки")), null, null))
+    }
 
     override fun onUpdateReceived(update: Update) {
         if (!update.hasMessage() || !update.message.hasText()) return

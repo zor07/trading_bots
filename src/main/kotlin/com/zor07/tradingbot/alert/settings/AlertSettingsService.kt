@@ -49,7 +49,7 @@ class AlertSettingsService(
 
     fun getWatchlist(): List<String> {
         val entity = repository.findByAlertType(AlertType.SYMBOL_WATCHLIST.name)
-            ?: return symbolCacheService.getTopSymbols(symbolsProperties.topN)
+            ?: return symbolCacheService.getTopSymbols(symbolsProperties.limit)
         return objectMapper.readValue<SymbolWatchlistSettings>(entity.settings).symbols
     }
 

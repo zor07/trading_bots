@@ -5,6 +5,6 @@ import java.time.Duration
 
 @ConfigurationProperties(prefix = "alerts.symbols")
 data class SymbolsProperties(
-    val topN: Int = 20,
+    val limit: Int = 20,
     val updateInterval: Duration = Duration.ofDays(1)
 )

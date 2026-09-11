@@ -34,12 +34,12 @@ alerts:
   lsr:
     account-threshold: 5.0
     position-threshold: 5.0
-    interval: PT30S
+    interval: PT60S
   symbols:
-    top-n: 50
+    limit: 100
     update-interval: PT3H
   price:
-    interval: PT30S
+    interval: PT60S
     candle-interval: 15m
     candle-limit: 1
     threshold: 0.5
