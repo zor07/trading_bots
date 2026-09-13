@@ -4,6 +4,10 @@ import com.zor07.tradingbot.alert.settings.AlertSettingsService
 import com.zor07.tradingbot.exchange.lsr.LongShortRatioClient
 import com.zor07.tradingbot.exchange.lsr.LongShortRatioSnapshot
 import com.zor07.tradingbot.user.UserService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -41,62 +45,66 @@ class LongShortRatioScheduler(
             return
         }
 
-        for (symbol in symbols) {
-            val accountRatios = lsrClients.mapNotNull { client ->
-                runCatching { client.getLsrByAccounts(symbol) }
-                    .onFailure { log.warn("Failed to get LSR accounts for {} from {}: {}", symbol, client.exchangeName, it.message) }
-                    .getOrNull()
-            }
+        runBlocking {
+            symbols.map { symbol ->
+                async(Dispatchers.IO) {
+                    val accountRatios = lsrClients.mapNotNull { client ->
+                        runCatching { client.getLsrByAccounts(symbol) }
+                            .onFailure { log.warn("Failed to get LSR accounts for {} from {}: {}", symbol, client.exchangeName, it.message) }
+                            .getOrNull()
+                    }
 
-            val positionRatios = lsrClients.mapNotNull { client ->
-                runCatching { client.getLsrByPositions(symbol) }
-                    .onFailure { log.warn("Failed to get LSR positions for {} from {}: {}", symbol, client.exchangeName, it.message) }
-                    .getOrNull()
-            }
+                    val positionRatios = lsrClients.mapNotNull { client ->
+                        runCatching { client.getLsrByPositions(symbol) }
+                            .onFailure { log.warn("Failed to get LSR positions for {} from {}: {}", symbol, client.exchangeName, it.message) }
+                            .getOrNull()
+                    }
 
-            if (accountRatios.isEmpty() || positionRatios.isEmpty()) {
-                log.debug("Insufficient LSR data for {} — skipping", symbol)
-                continue
-            }
+                    if (accountRatios.isEmpty() || positionRatios.isEmpty()) {
+                        log.debug("Insufficient LSR data for {} — skipping", symbol)
+                        return@async
+                    }
 
-            val curr = LongShortRatioSnapshot(
-                symbol = symbol,
-                accountLongRatio = accountRatios.average(),
-                positionLongRatio = positionRatios.average()
-            )
+                    val curr = LongShortRatioSnapshot(
+                        symbol = symbol,
+                        accountLongRatio = accountRatios.average(),
+                        positionLongRatio = positionRatios.average()
+                    )
 
-            val prev = previousSnapshots[symbol]
-            previousSnapshots[symbol] = curr
+                    val prev = previousSnapshots[symbol]
+                    previousSnapshots[symbol] = curr
 
-            if (prev == null) {
-                log.debug("First LSR snapshot for {} — skipping delta check", symbol)
-                continue
-            }
+                    if (prev == null) {
+                        log.debug("First LSR snapshot for {} — skipping delta check", symbol)
+                        return@async
+                    }
 
-            val change = detector.detect(prev, curr)
-            log.info("{} LSR accountDelta={}% positionDelta={}%",
-                symbol,
-                String.format("%.2f", change.accountDelta),
-                String.format("%.2f", change.positionDelta)
-            )
+                    val change = detector.detect(prev, curr)
+                    log.info("{} LSR accountDelta={}% positionDelta={}%",
+                        symbol,
+                        String.format("%.2f", change.accountDelta),
+                        String.format("%.2f", change.positionDelta)
+                    )
 
-            val accountTriggered = abs(change.accountDelta) >= settings.accountThreshold
-            val positionTriggered = abs(change.positionDelta) >= settings.positionThreshold
-            val sameDirection = change.accountDelta.sign == change.positionDelta.sign
-            val triggered = if (settings.requireBoth) {
-                accountTriggered && positionTriggered && sameDirection
-            } else {
-                accountTriggered || positionTriggered
-            }
+                    val accountTriggered = abs(change.accountDelta) >= settings.accountThreshold
+                    val positionTriggered = abs(change.positionDelta) >= settings.positionThreshold
+                    val sameDirection = change.accountDelta.sign == change.positionDelta.sign
+                    val triggered = if (settings.requireBoth) {
+                        accountTriggered && positionTriggered && sameDirection
+                    } else {
+                        accountTriggered || positionTriggered
+                    }
 
-            if (triggered) {
-                log.info("LSR ALERT triggered: {} accountDelta={}% positionDelta={}%",
-                    symbol,
-                    String.format("%.2f", change.accountDelta),
-                    String.format("%.2f", change.positionDelta)
-                )
-                alertService.handle(symbol, change.accountDelta, change.positionDelta)
-            }
+                    if (triggered) {
+                        log.info("LSR ALERT triggered: {} accountDelta={}% positionDelta={}%",
+                            symbol,
+                            String.format("%.2f", change.accountDelta),
+                            String.format("%.2f", change.positionDelta)
+                        )
+                        alertService.handle(symbol, change.accountDelta, change.positionDelta)
+                    }
+                }
+            }.awaitAll()
         }
     }
 }

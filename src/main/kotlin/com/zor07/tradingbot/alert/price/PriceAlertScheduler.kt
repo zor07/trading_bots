@@ -3,6 +3,10 @@ package com.zor07.tradingbot.alert.price
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
 import com.zor07.tradingbot.exchange.ExchangeClient
 import com.zor07.tradingbot.user.UserService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -37,25 +41,29 @@ class PriceAlertScheduler(
             return
         }
 
-        for (symbol in symbols) {
-            val changes = exchangeClients.mapNotNull { client ->
-                runCatching {
-                    val klines = client.getKlines(symbol, settings.candleInterval, settings.candleLimit)
-                    detector.computeChange(klines)
-                }.onFailure {
-                    log.warn("Failed to get klines for {} from {}: {}", symbol, client.exchangeName, it.message)
-                }.getOrNull()
-            }
+        runBlocking {
+            symbols.map { symbol ->
+                async(Dispatchers.IO) {
+                    val changes = exchangeClients.mapNotNull { client ->
+                        runCatching {
+                            val klines = client.getKlines(symbol, settings.candleInterval, settings.candleLimit)
+                            detector.computeChange(klines)
+                        }.onFailure {
+                            log.warn("Failed to get klines for {} from {}: {}", symbol, client.exchangeName, it.message)
+                        }.getOrNull()
+                    }
 
-            if (changes.isEmpty()) continue
+                    if (changes.isEmpty()) return@async
 
-            val avgChange = changes.average()
-            log.info("{} avgChange={}%", symbol, String.format("%.2f", avgChange))
+                    val avgChange = changes.average()
+                    log.info("{} avgChange={}%", symbol, String.format("%.2f", avgChange))
 
-            if (abs(avgChange) >= settings.threshold) {
-                log.info("ALERT triggered: {} change={}% threshold={}%", symbol, String.format("%.2f", avgChange), settings.threshold)
-                alertService.handle(symbol, avgChange)
-            }
+                    if (abs(avgChange) >= settings.threshold) {
+                        log.info("ALERT triggered: {} change={}% threshold={}%", symbol, String.format("%.2f", avgChange), settings.threshold)
+                        alertService.handle(symbol, avgChange)
+                    }
+                }
+            }.awaitAll()
         }
     }
 }
