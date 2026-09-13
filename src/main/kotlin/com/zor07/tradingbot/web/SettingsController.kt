@@ -24,7 +24,7 @@ class SettingsController(
         val lsrSettings = settingsService.getLsrSettings()
 
         model.addAttribute("priceSettings", priceSettings)
-        model.addAttribute("candleIntervals", listOf("1m", "5m", "15m", "1h", "4h"))
+        model.addAttribute("candleIntervals", listOf("1m", "3m", "5m", "15m", "1h", "4h"))
         model.addAttribute("lsrSettings", lsrSettings)
         model.addAttribute("watchlistCount", settingsService.getWatchlist().size)
         return "settings"
