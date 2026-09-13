@@ -9,5 +9,6 @@ data class ExchangeProperties(
 )
 
 data class ExchangeConnectionProperties(
-    val baseUrl: String
+    val baseUrl: String,
+    val enabled: Boolean = true
 )

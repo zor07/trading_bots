@@ -29,6 +29,7 @@ exchange:
     base-url: https://fapi.binance.com
   bybit:
     base-url: https://api.bybit.com
+    enabled: false
 
 alerts:
   lsr:

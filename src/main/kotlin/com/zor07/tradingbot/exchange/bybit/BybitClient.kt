@@ -8,6 +8,7 @@ import com.zor07.tradingbot.exchange.lsr.LongShortRatioClient
 import com.zor07.tradingbot.exchange.model.Kline
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestClientException
@@ -15,6 +16,7 @@ import java.math.BigDecimal
 import java.time.Instant
 
 @Component
+@ConditionalOnProperty(prefix = "exchange.bybit", name = ["enabled"], havingValue = "true", matchIfMissing = true)
 class BybitClient(
     @Qualifier("bybitRestClient") private val restClient: RestClient,
     private val objectMapper: ObjectMapper
