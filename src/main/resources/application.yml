@@ -30,6 +30,8 @@ exchange:
   bybit:
     base-url: https://api.bybit.com
     enabled: false
+  proxy-host: ${EXCHANGE_PROXY_HOST:}
+  proxy-port: ${EXCHANGE_PROXY_PORT:0}
 
 alerts:
   lsr:

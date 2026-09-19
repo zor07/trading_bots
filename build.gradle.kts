@@ -27,6 +27,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
     implementation("org.telegram:telegrambots:6.9.7.1")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")

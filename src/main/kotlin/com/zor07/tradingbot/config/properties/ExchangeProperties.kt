@@ -5,7 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "exchange")
 data class ExchangeProperties(
     val binance: ExchangeConnectionProperties,
-    val bybit: ExchangeConnectionProperties
+    val bybit: ExchangeConnectionProperties,
+    val proxyHost: String = "",
+    val proxyPort: Int = 0
 )
 
 data class ExchangeConnectionProperties(
