@@ -35,7 +35,4 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /opt/trading_bots_infra
-            git pull
-            ./deploy.sh
+          script: /opt/trading_bots_deploy/deploy.sh
