@@ -37,11 +37,7 @@ class AlertBot(
     override fun getBotUsername(): String = username
 
     override fun onRegister() {
-        runCatching {
-            execute(SetMyCommands(listOf(BotCommand("start", "Подписаться и получить ссылку на настройки")), null, null))
-        }.onFailure {
-            log.warn("Failed to set bot commands: {}", it.message)
-        }
+        execute(SetMyCommands(listOf(BotCommand("start", "Подписаться и получить ссылку на настройки")), null, null))
     }
 
     override fun onUpdateReceived(update: Update) {
