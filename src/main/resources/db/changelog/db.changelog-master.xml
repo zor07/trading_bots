@@ -18,5 +18,6 @@
     <include file="db/changelog/v1/011_release_note_lsr_disabled.xml"/>
     <include file="db/changelog/v1/012_add_bot_type_to_users.xml"/>
     <include file="db/changelog/v1/013_release_note_bot_separation.xml"/>
+    <include file="db/changelog/v1/014_release_note_oi_growth_only.xml"/>
 
 </databaseChangeLog>

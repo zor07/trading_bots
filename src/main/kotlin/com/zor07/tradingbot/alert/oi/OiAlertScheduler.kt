@@ -11,7 +11,6 @@ import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import kotlin.math.abs
 
 @Component
 class OiAlertScheduler(
@@ -61,7 +60,7 @@ class OiAlertScheduler(
                     val changePercent = (curr - prev) / prev * 100
                     log.info("{} OI change={}%", symbol, String.format("%.2f", changePercent))
 
-                    if (abs(changePercent) >= settings.threshold) {
+                    if (changePercent >= settings.threshold) {
                         log.info("OI ALERT triggered: {} change={}% threshold={}%", symbol, String.format("%.2f", changePercent), settings.threshold)
                         alertService.handle(symbol, changePercent, prev, curr)
                     }
