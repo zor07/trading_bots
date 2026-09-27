@@ -11,5 +11,7 @@
     <include file="db/changelog/v1/004_create_user_alert_settings.xml"/>
     <include file="db/changelog/v1/005_refactor_alert_settings_to_global.xml"/>
     <include file="db/changelog/v1/006_reset_symbol_watchlist.xml"/>
+    <include file="db/changelog/v1/007_create_release_notes.xml"/>
+    <include file="db/changelog/v1/008_release_note_symbol_limit_and_notifications.xml"/>
 
 </databaseChangeLog>

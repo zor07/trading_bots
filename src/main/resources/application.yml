@@ -39,7 +39,7 @@ alerts:
     position-threshold: 5.0
     interval: PT60S
   symbols:
-    limit: 100
+    limit: 727
     update-interval: PT3H
   price:
     interval: PT60S
