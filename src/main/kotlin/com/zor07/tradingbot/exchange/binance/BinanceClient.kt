@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.zor07.tradingbot.exchange.ExchangeClient
 import com.zor07.tradingbot.exchange.SymbolProvider
 import com.zor07.tradingbot.exchange.binance.dto.BinanceLsrDto
+import com.zor07.tradingbot.exchange.binance.dto.BinanceOiDto
 import com.zor07.tradingbot.exchange.binance.dto.BinanceTickerDto
 import com.zor07.tradingbot.exchange.binance.dto.toKline
 import com.zor07.tradingbot.exchange.lsr.LongShortRatioClient
 import com.zor07.tradingbot.exchange.model.Kline
+import com.zor07.tradingbot.exchange.oi.OpenInterestClient
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.stereotype.Component
@@ -16,7 +18,7 @@ import org.springframework.web.client.RestClient
 @Component
 class BinanceClient(
     @Qualifier("binanceRestClient") private val restClient: RestClient
-) : ExchangeClient, SymbolProvider, LongShortRatioClient {
+) : ExchangeClient, SymbolProvider, LongShortRatioClient, OpenInterestClient {
 
     override val exchangeName: String = "BINANCE"
 
@@ -53,6 +55,21 @@ class BinanceClient(
             .body(object : ParameterizedTypeReference<List<BinanceLsrDto>>() {})
             ?: return null
         return entries.firstOrNull()?.longAccount?.toDoubleOrNull()?.times(100)
+    }
+
+    override fun getOpenInterestHistory(symbol: String, period: String): List<Double> {
+        val entries = restClient.get()
+            .uri { builder ->
+                builder.path("/futures/data/openInterestHist")
+                    .queryParam("symbol", symbol)
+                    .queryParam("period", period)
+                    .queryParam("limit", 2)
+                    .build()
+            }
+            .retrieve()
+            .body(object : ParameterizedTypeReference<List<BinanceOiDto>>() {})
+            ?: return emptyList()
+        return entries.mapNotNull { it.sumOpenInterestValue.toDoubleOrNull() }
     }
 
     override fun getKlines(symbol: String, candleInterval: String, limit: Int): List<Kline> {

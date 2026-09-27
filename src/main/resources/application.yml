@@ -1,5 +1,5 @@
 app:
-  base-url: http://localhost:8080
+  base-url: http://localhost:8080/trading-bots
 
 server:
   servlet:
@@ -46,4 +46,8 @@ alerts:
     candle-interval: 15m
     candle-limit: 1
     threshold: 0.5
+  oi:
+    threshold: 5.0
+    period: 5m
+    interval: PT60S
 

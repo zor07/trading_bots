@@ -14,5 +14,6 @@
     <include file="db/changelog/v1/007_create_release_notes.xml"/>
     <include file="db/changelog/v1/008_release_note_symbol_limit_and_notifications.xml"/>
     <include file="db/changelog/v1/009_release_note_symbol_selector_fix.xml"/>
+    <include file="db/changelog/v1/010_release_note_oi_alert.xml"/>
 
 </databaseChangeLog>

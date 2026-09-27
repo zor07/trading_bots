@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.zor07.tradingbot.alert.model.AlertType
 import com.zor07.tradingbot.config.properties.LongShortRatioProperties
+import com.zor07.tradingbot.config.properties.OiAlertProperties
 import com.zor07.tradingbot.config.properties.PriceAlertProperties
 import com.zor07.tradingbot.config.properties.SymbolsProperties
 import com.zor07.tradingbot.exchange.SymbolCacheService
@@ -16,6 +17,7 @@ class AlertSettingsService(
     private val objectMapper: ObjectMapper,
     private val priceAlertProperties: PriceAlertProperties,
     private val lsrProperties: LongShortRatioProperties,
+    private val oiProperties: OiAlertProperties,
     private val symbolsProperties: SymbolsProperties,
     private val symbolCacheService: SymbolCacheService
 ) {
@@ -45,6 +47,19 @@ class AlertSettingsService(
 
     fun saveLsrSettings(settings: LongShortRatioSettings) {
         save(AlertType.LONG_SHORT_RATIO.name, settings)
+    }
+
+    fun getOiSettings(): OiAlertSettings {
+        val entity = repository.findByAlertType(AlertType.OPEN_INTEREST_SPIKE.name)
+            ?: return OiAlertSettings(
+                threshold = oiProperties.threshold,
+                period = oiProperties.period
+            )
+        return objectMapper.readValue(entity.settings)
+    }
+
+    fun saveOiSettings(settings: OiAlertSettings) {
+        save(AlertType.OPEN_INTEREST_SPIKE.name, settings)
     }
 
     fun getWatchlist(): List<String> {

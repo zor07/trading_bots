@@ -104,6 +104,42 @@
             </div>
         </div>
 
+        <!-- Open Interest Alert -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>Открытый интерес (OI)</strong>
+                    <div class="text-muted small mt-1">Открытый интерес — количество открытых фьючерсных контрактов по инструменту. Резкий рост OI означает что крупные игроки активно входят в позицию.</div>
+                </div>
+                <div class="form-check form-switch mb-0 ms-3 flex-shrink-0">
+                    <input class="form-check-input" type="checkbox" name="oiEnabled" id="oiEnabled"
+                           th:checked="${oiSettings.enabled}">
+                    <label class="form-check-label" for="oiEnabled">Включён</label>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label class="form-label fw-semibold">Порог срабатывания (%)</label>
+                        <input type="number" name="oiThreshold" class="form-control" step="0.1" min="0.1"
+                               th:value="${oiSettings.threshold}">
+                        <div class="form-text">На сколько процентов должен измениться OI за период чтобы сработал алерт. Например, 5 — алерт придёт если OI вырос или упал на 5% и более.</div>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label fw-semibold">Период</label>
+                        <select name="oiPeriod" class="form-select">
+                            <option th:each="p : ${oiPeriods}"
+                                    th:value="${p}"
+                                    th:text="${p}"
+                                    th:selected="${p == oiSettings.period}">
+                            </option>
+                        </select>
+                        <div class="form-text">Интервал агрегации OI. Например, 5m — сравниваются два пятиминутных слепка.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary w-100">Сохранить</button>
     </form>
 </div>
