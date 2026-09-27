@@ -15,13 +15,15 @@ class PriceAlertService(
     private val notifier: AlertNotifier
 ) {
 
-    fun handle(symbol: String, changePercent: Double) {
+    fun handle(symbol: String, changePercent: Double, candleInterval: String, candleLimit: Int) {
         val emoji = if (changePercent > 0) "🟢" else "🔴"
+        val sign = if (changePercent > 0) "+" else ""
+        val intervalDisplay = candleInterval.replace("m", "м").replace("h", "ч")
         val message = """
-            |$emoji Price alert: $symbol ${String.format("%.2f", changePercent)}%
+            |$emoji $symbol $sign${String.format("%.2f", changePercent)}% · $intervalDisplay · $candleLimit св.
             |
             |Bybit: https://www.bybit.com/ru-RU/trade/usdt/$symbol
-            |Coinglass: https://www.coinglass.com/tv/ru/Bybit_$symbol
+            |Coinglass: https://www.coinglass.com/tv/ru/Bybit\_$symbol
         """.trimMargin()
 
         notifier.send(message, BotType.PRICE)

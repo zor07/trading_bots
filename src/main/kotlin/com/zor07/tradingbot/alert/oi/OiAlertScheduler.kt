@@ -62,7 +62,7 @@ class OiAlertScheduler(
 
                     if (changePercent >= settings.threshold) {
                         log.info("OI ALERT triggered: {} change={}% threshold={}%", symbol, String.format("%.2f", changePercent), settings.threshold)
-                        alertService.handle(symbol, changePercent, prev, curr)
+                        alertService.handle(symbol, changePercent, prev, curr, settings.period)
                     }
                 }
             }.awaitAll()
