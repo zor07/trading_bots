@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.telegram.telegrambots.bots.DefaultBotOptions
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand
@@ -21,6 +22,14 @@ abstract class AbstractAlertBot(
 ) : TelegramLongPollingBot(options, token) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+
+    override fun clearWebhook() {
+        try {
+            super.clearWebhook()
+        } catch (e: TelegramApiRequestException) {
+            log.warn("clearWebhook failed (ignored): {}", e.message)
+        }
+    }
 
     override fun onRegister() {
         runCatching {
