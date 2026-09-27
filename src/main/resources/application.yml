@@ -19,8 +19,12 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
 telegram:
-  bot-token: ${TELEGRAM_BOT_TOKEN}
-  bot-username: ${TELEGRAM_BOT_USERNAME}
+  price-bot:
+    token: ${TELEGRAM_PRICE_BOT_TOKEN}
+    username: ${TELEGRAM_PRICE_BOT_USERNAME}
+  oi-bot:
+    token: ${TELEGRAM_OI_BOT_TOKEN}
+    username: ${TELEGRAM_OI_BOT_USERNAME}
   proxy-host: ${TELEGRAM_BOT_PROXY_HOST:}
   proxy-port: ${TELEGRAM_BOT_PROXY_PORT:0}
 

@@ -4,8 +4,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "telegram")
 data class TelegramProperties(
-    val botToken: String,
-    val botUsername: String,
+    val priceBot: BotConfig,
+    val oiBot: BotConfig,
     val proxyHost: String = "",
     val proxyPort: Int = 0
-)
+) {
+    data class BotConfig(val token: String, val username: String)
+}

@@ -21,7 +21,7 @@ class StartupNotifier(
 
         runCatching {
             val body = unsent.joinToString("\n") { "• ${it.message}" }
-            notifier.send("🚀 Обновление задеплоено:\n\n$body")
+            notifier.sendToAll("🚀 Обновление задеплоено:\n\n$body")
             unsent.forEach { it.sent = true }
             repository.saveAll(unsent)
             log.info("Release notes sent and marked: ids={}", unsent.map { it.id })

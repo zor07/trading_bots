@@ -1,6 +1,7 @@
 package com.zor07.tradingbot.alert.price
 
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
+import com.zor07.tradingbot.bot.BotType
 import com.zor07.tradingbot.exchange.ExchangeClient
 import com.zor07.tradingbot.user.UserService
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +28,7 @@ class PriceAlertScheduler(
     fun run() {
         val settings = settingsService.getPriceSettings()
         val symbols = settingsService.getWatchlist()
-        val subscriberCount = userService.getChatIds().size
+        val subscriberCount = userService.getChatIds(BotType.PRICE).size
 
         log.info("Price alert tick: {} symbols, {} exchanges, {} subscribers", symbols.size, exchangeClients.size, subscriberCount)
 

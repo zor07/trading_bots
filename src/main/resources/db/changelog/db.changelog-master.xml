@@ -16,5 +16,7 @@
     <include file="db/changelog/v1/009_release_note_symbol_selector_fix.xml"/>
     <include file="db/changelog/v1/010_release_note_oi_alert.xml"/>
     <include file="db/changelog/v1/011_release_note_lsr_disabled.xml"/>
+    <include file="db/changelog/v1/012_add_bot_type_to_users.xml"/>
+    <include file="db/changelog/v1/013_release_note_bot_separation.xml"/>
 
 </databaseChangeLog>

@@ -1,6 +1,7 @@
 package com.zor07.tradingbot.alert.lsr
 
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
+import com.zor07.tradingbot.bot.BotType
 import com.zor07.tradingbot.exchange.lsr.LongShortRatioClient
 import com.zor07.tradingbot.exchange.lsr.LongShortRatioSnapshot
 import com.zor07.tradingbot.user.UserService
@@ -32,7 +33,7 @@ class LongShortRatioScheduler(
         return  // LSR временно отключён
         val settings = settingsService.getLsrSettings()
         val symbols = settingsService.getWatchlist()
-        val subscriberCount = userService.getChatIds().size
+        val subscriberCount = userService.getAllChatIds().size
 
         log.info("LSR alert tick: {} symbols, {} clients, {} subscribers", symbols.size, lsrClients.size, subscriberCount)
 

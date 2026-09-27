@@ -1,6 +1,7 @@
 package com.zor07.tradingbot.alert.oi
 
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
+import com.zor07.tradingbot.bot.BotType
 import com.zor07.tradingbot.exchange.oi.OpenInterestClient
 import com.zor07.tradingbot.user.UserService
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,7 @@ class OiAlertScheduler(
     fun run() {
         val settings = settingsService.getOiSettings()
         val symbols = settingsService.getWatchlist()
-        val subscriberCount = userService.getChatIds().size
+        val subscriberCount = userService.getChatIds(BotType.OI).size
 
         log.info("OI alert tick: {} symbols, {} clients, {} subscribers", symbols.size, oiClients.size, subscriberCount)
 

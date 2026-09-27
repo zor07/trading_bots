@@ -4,6 +4,7 @@ import com.zor07.tradingbot.alert.AlertHistory
 import com.zor07.tradingbot.alert.AlertHistoryRepository
 import com.zor07.tradingbot.alert.AlertNotifier
 import com.zor07.tradingbot.alert.model.AlertType
+import com.zor07.tradingbot.bot.BotType
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.Instant
@@ -29,7 +30,7 @@ class LongShortRatioAlertService(
             |Coinglass: https://www.coinglass.com/tv/ru/Bybit_$symbol
         """.trimMargin()
 
-        notifier.send(message)
+        notifier.send(message, BotType.PRICE)
         repository.save(
             AlertHistory(
                 alertType = AlertType.LONG_SHORT_RATIO.name,

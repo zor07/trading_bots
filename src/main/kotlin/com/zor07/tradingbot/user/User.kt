@@ -20,5 +20,8 @@ data class User(
     val subscribedAt: Instant = Instant.now(),
 
     @Column(name = "auth_token", unique = true)
-    val authToken: String? = null
+    val authToken: String? = null,
+
+    @Column(name = "bot_type", nullable = false)
+    val botType: String = "PRICE"
 )
