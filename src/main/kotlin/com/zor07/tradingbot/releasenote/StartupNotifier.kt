@@ -19,15 +19,14 @@ class StartupNotifier(
         val unsent = repository.findAllBySentFalse()
         if (unsent.isEmpty()) return
 
-        unsent.forEach { note ->
-            runCatching {
-                notifier.send("🚀 Обновление задеплоено:\n\n${note.message}")
-                note.sent = true
-                repository.save(note)
-                log.info("Release note sent and marked: id={}", note.id)
-            }.onFailure {
-                log.error("Failed to send release note id={}: {}", note.id, it.message)
-            }
+        runCatching {
+            val body = unsent.joinToString("\n") { "• ${it.message}" }
+            notifier.send("🚀 Обновление задеплоено:\n\n$body")
+            unsent.forEach { it.sent = true }
+            repository.saveAll(unsent)
+            log.info("Release notes sent and marked: ids={}", unsent.map { it.id })
+        }.onFailure {
+            log.error("Failed to send release notes: {}", it.message)
         }
     }
 }

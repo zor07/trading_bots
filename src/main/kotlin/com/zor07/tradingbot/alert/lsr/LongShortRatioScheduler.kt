@@ -29,6 +29,7 @@ class LongShortRatioScheduler(
 
     @Scheduled(fixedDelayString = "\${alerts.lsr.interval}")
     fun run() {
+        return  // LSR временно отключён
         val settings = settingsService.getLsrSettings()
         val symbols = settingsService.getWatchlist()
         val subscriberCount = userService.getChatIds().size
