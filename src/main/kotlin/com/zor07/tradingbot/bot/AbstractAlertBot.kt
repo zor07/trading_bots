@@ -33,8 +33,12 @@ abstract class AbstractAlertBot(
     override fun onUpdateReceived(update: Update) {
         if (!update.hasMessage() || !update.message.hasText()) return
         val message = update.message
-        if (message.text.trim().startsWith("/start")) {
-            handleStart(message.chatId, message.from?.userName)
+        runCatching {
+            if (message.text.trim().startsWith("/start")) {
+                handleStart(message.chatId, message.from?.userName)
+            }
+        }.onFailure {
+            log.error("Failed to handle update chatId={}: {}", message.chatId, it.message)
         }
     }
 
