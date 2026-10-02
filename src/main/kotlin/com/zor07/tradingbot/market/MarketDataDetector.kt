@@ -11,10 +11,10 @@ class MarketDataDetector(private val reader: MarketDataReader) {
     fun detect(curr: SymbolState): SymbolDelta? {
         val prev = reader.getState(curr.symbol)
         if (prev == null) {
-            log.info("{}: no prev state, skipping delta", curr.symbol)
+            log.debug("{}: no prev state, skipping delta", curr.symbol)
             return null
         }
-        log.info("{}: prev={}, curr={}", curr.symbol, prev, curr)
+        log.debug("{}: prev={}, curr={}", curr.symbol, prev, curr)
         return SymbolDelta(symbol = curr.symbol, prev = prev, curr = curr)
     }
 }

@@ -20,7 +20,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
                     <strong>Резкое движение цены</strong>
-                    <div class="text-muted small mt-1">Бот следит за резкими движениями цены и шлёт уведомление когда монета двигается сильнее порога</div>
+                    <a th:href="${priceBotUrl}" target="_blank" class="d-block text-muted small mt-1" th:text="${priceBotUrl}"></a>
                 </div>
                 <div class="form-check form-switch mb-0 ms-3 flex-shrink-0">
                     <input class="form-check-input" type="checkbox" name="enabled" id="priceEnabled"
@@ -63,7 +63,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
                     <strong>Открытый интерес (OI)</strong>
-                    <div class="text-muted small mt-1">Открытый интерес — количество открытых фьючерсных контрактов по инструменту. Резкий рост OI означает что крупные игроки активно входят в позицию.</div>
+                    <a th:href="${oiBotUrl}" target="_blank" class="d-block text-muted small mt-1" th:text="${oiBotUrl}"></a>
                 </div>
                 <div class="form-check form-switch mb-0 ms-3 flex-shrink-0">
                     <input class="form-check-input" type="checkbox" name="oiEnabled" id="oiEnabled"
@@ -99,7 +99,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
                     <strong>Ликвидации</strong>
-                    <div class="text-muted small mt-1">Бот слушает поток принудительных ликвидаций на Binance Futures и шлёт уведомление когда объём ликвидации превышает порог.</div>
+                    <a th:href="${liquidationBotUrl}" target="_blank" class="d-block text-muted small mt-1" th:text="${liquidationBotUrl}"></a>
                 </div>
                 <div class="form-check form-switch mb-0 ms-3 flex-shrink-0">
                     <input class="form-check-input" type="checkbox" name="liquidationEnabled" id="liquidationEnabled"

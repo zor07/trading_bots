@@ -14,7 +14,7 @@ class MarketDataFetcher(
     fun fetch(symbol: String): SymbolState {
         val price = priceDataFetcher.fetch(symbol)
         val oi = oiDataFetcher.fetch(symbol)
-        log.info("{}: price={}, oi={}", symbol, price, oi)
+        log.debug("{}: price={}, oi={}", symbol, price, oi)
         return SymbolState(symbol = symbol, price = price, oi = oi)
     }
 }

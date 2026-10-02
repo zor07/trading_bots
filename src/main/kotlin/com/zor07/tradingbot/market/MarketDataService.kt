@@ -22,7 +22,7 @@ class MarketDataService(
 
     fun refresh() {
         val symbols = settingsService.getWatchlist()
-        log.info("Market data refresh: {} symbols", symbols.size)
+        log.debug("Market data refresh: {} symbols", symbols.size)
 
         runBlocking {
             symbols.map { symbol ->
@@ -31,10 +31,10 @@ class MarketDataService(
                     val delta = detector.detect(curr)
                     writer.setState(curr)
                     if (delta != null) {
-                        log.info("{}: publishing delta", symbol)
+                        log.debug("{}: publishing delta", symbol)
                         publisher.publishEvent(SymbolDeltaEvent(delta))
                     } else {
-                        log.info("{}: no delta, skipping event", symbol)
+                        log.debug("{}: no delta, skipping event", symbol)
                     }
                 }
             }.awaitAll()

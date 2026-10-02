@@ -4,6 +4,7 @@ import com.zor07.tradingbot.alert.settings.AlertSettingsService
 import com.zor07.tradingbot.alert.settings.LiquidationAlertSettings
 import com.zor07.tradingbot.alert.settings.OiAlertSettings
 import com.zor07.tradingbot.alert.settings.PriceAlertSettings
+import com.zor07.tradingbot.config.properties.TelegramProperties
 import jakarta.servlet.http.HttpSession
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 @RequestMapping("/settings")
 class SettingsController(
-    private val settingsService: AlertSettingsService
+    private val settingsService: AlertSettingsService,
+    private val telegramProperties: TelegramProperties
 ) {
 
     @GetMapping
@@ -29,6 +31,9 @@ class SettingsController(
         model.addAttribute("oiSettings", oiSettings)
         model.addAttribute("oiPeriods", listOf("5m", "15m", "30m", "1h", "2h", "4h", "6h", "12h", "1d"))
         model.addAttribute("liquidationSettings", settingsService.getLiquidationSettings())
+        model.addAttribute("priceBotUrl", "https://t.me/${telegramProperties.priceBot.username}")
+        model.addAttribute("oiBotUrl", "https://t.me/${telegramProperties.oiBot.username}")
+        model.addAttribute("liquidationBotUrl", "https://t.me/${telegramProperties.liquidationBot.username}")
         model.addAttribute("watchlistCount", settingsService.getWatchlist().size)
         return "settings"
     }
