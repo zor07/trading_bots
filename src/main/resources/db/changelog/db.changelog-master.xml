@@ -22,5 +22,7 @@
     <include file="db/changelog/v1/015_release_note_message_format.xml"/>
     <include file="db/changelog/v1/016_release_note_price_counter.xml"/>
     <include file="db/changelog/v1/017_drop_alert_history.xml"/>
+    <include file="db/changelog/v1/018_release_note_new_architecture.xml"/>
+    <include file="db/changelog/v1/019_release_note_liquidations.xml"/>
 
 </databaseChangeLog>
