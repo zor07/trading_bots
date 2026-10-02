@@ -24,6 +24,7 @@ class OiAlertScheduler(
 
     @Scheduled(fixedDelayString = "\${alerts.oi.interval}")
     fun run() {
+        return  // отключён, заменён на MarketDataScheduler + OiAlertEventService
         val settings = settingsService.getOiSettings()
         val symbols = settingsService.getWatchlist()
         val subscriberCount = userService.getChatIds(BotType.OI).size

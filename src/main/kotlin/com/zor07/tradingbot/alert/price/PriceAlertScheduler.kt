@@ -26,6 +26,7 @@ class PriceAlertScheduler(
 
     @Scheduled(fixedDelayString = "\${alerts.price.interval}")
     fun run() {
+        return  // отключён, заменён на MarketDataScheduler + PriceAlertEventService
         val settings = settingsService.getPriceSettings()
         val symbols = settingsService.getWatchlist()
         val subscriberCount = userService.getChatIds(BotType.PRICE).size
