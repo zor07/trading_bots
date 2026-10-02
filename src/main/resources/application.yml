@@ -38,10 +38,6 @@ exchange:
   proxy-port: ${EXCHANGE_PROXY_PORT:0}
 
 alerts:
-  lsr:
-    account-threshold: 5.0
-    position-threshold: 5.0
-    interval: PT60S
   symbols:
     limit: 727
     update-interval: PT3H

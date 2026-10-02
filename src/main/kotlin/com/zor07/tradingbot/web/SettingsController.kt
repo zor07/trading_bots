@@ -1,7 +1,6 @@
 package com.zor07.tradingbot.web
 
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
-import com.zor07.tradingbot.alert.settings.LongShortRatioSettings
 import com.zor07.tradingbot.alert.settings.OiAlertSettings
 import com.zor07.tradingbot.alert.settings.PriceAlertSettings
 import jakarta.servlet.http.HttpSession
@@ -22,12 +21,10 @@ class SettingsController(
     fun settingsPage(session: HttpSession, model: Model): String {
         SessionUtils.getUserId(session) ?: return "redirect:/login"
         val priceSettings = settingsService.getPriceSettings()
-        val lsrSettings = settingsService.getLsrSettings()
         val oiSettings = settingsService.getOiSettings()
 
         model.addAttribute("priceSettings", priceSettings)
         model.addAttribute("candleIntervals", listOf("1m", "3m", "5m", "15m", "1h", "4h"))
-        model.addAttribute("lsrSettings", lsrSettings)
         model.addAttribute("oiSettings", oiSettings)
         model.addAttribute("oiPeriods", listOf("5m", "15m", "30m", "1h", "2h", "4h", "6h", "12h", "1d"))
         model.addAttribute("watchlistCount", settingsService.getWatchlist().size)
@@ -41,10 +38,6 @@ class SettingsController(
         @RequestParam threshold: Double,
         @RequestParam candleInterval: String,
         @RequestParam candleLimit: Int,
-        @RequestParam lsrEnabled: Boolean = false,
-        @RequestParam lsrAccountThreshold: Double,
-        @RequestParam lsrPositionThreshold: Double,
-        @RequestParam lsrRequireBoth: Boolean = false,
         @RequestParam oiEnabled: Boolean = false,
         @RequestParam oiThreshold: Double,
         @RequestParam oiPeriod: String
@@ -56,13 +49,6 @@ class SettingsController(
             threshold = threshold,
             candleInterval = candleInterval,
             candleLimit = candleLimit
-        ))
-
-        settingsService.saveLsrSettings(LongShortRatioSettings(
-            enabled = lsrEnabled,
-            accountThreshold = lsrAccountThreshold,
-            positionThreshold = lsrPositionThreshold,
-            requireBoth = lsrRequireBoth
         ))
 
         settingsService.saveOiSettings(OiAlertSettings(
