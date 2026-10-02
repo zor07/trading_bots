@@ -6,13 +6,13 @@ import com.zor07.tradingbot.user.UserService
 import org.springframework.stereotype.Component
 
 @Component
-class OiAlertBot(
+class LiquidationAlertBot(
     properties: TelegramProperties,
     appProperties: AppProperties,
     userService: UserService
-) : AbstractAlertBot(properties, properties.oiBot.token, appProperties, userService, BotType.OI) {
+) : AbstractAlertBot(properties, properties.liquidationBot.token, appProperties, userService, BotType.LIQUIDATION) {
 
-    private val username = properties.oiBot.username
+    private val username = properties.liquidationBot.username
 
     override fun getBotUsername(): String = username
 }

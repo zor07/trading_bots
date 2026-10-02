@@ -2,6 +2,7 @@ package com.zor07.tradingbot
 
 import com.zor07.tradingbot.config.properties.AppProperties
 import com.zor07.tradingbot.config.properties.ExchangeProperties
+import com.zor07.tradingbot.config.properties.LiquidationAlertProperties
 import com.zor07.tradingbot.config.properties.OiAlertProperties
 import com.zor07.tradingbot.config.properties.PriceAlertProperties
 import com.zor07.tradingbot.config.properties.SymbolsProperties
@@ -20,7 +21,8 @@ import org.springframework.scheduling.annotation.EnableScheduling
     ExchangeProperties::class,
     SymbolsProperties::class,
     PriceAlertProperties::class,
-    OiAlertProperties::class
+    OiAlertProperties::class,
+    LiquidationAlertProperties::class
 )
 class TradingBotApplication
 

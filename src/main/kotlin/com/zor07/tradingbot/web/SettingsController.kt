@@ -1,6 +1,7 @@
 package com.zor07.tradingbot.web
 
 import com.zor07.tradingbot.alert.settings.AlertSettingsService
+import com.zor07.tradingbot.alert.settings.LiquidationAlertSettings
 import com.zor07.tradingbot.alert.settings.OiAlertSettings
 import com.zor07.tradingbot.alert.settings.PriceAlertSettings
 import jakarta.servlet.http.HttpSession
@@ -27,6 +28,7 @@ class SettingsController(
         model.addAttribute("candleIntervals", listOf("1m", "3m", "5m", "15m", "1h", "4h"))
         model.addAttribute("oiSettings", oiSettings)
         model.addAttribute("oiPeriods", listOf("5m", "15m", "30m", "1h", "2h", "4h", "6h", "12h", "1d"))
+        model.addAttribute("liquidationSettings", settingsService.getLiquidationSettings())
         model.addAttribute("watchlistCount", settingsService.getWatchlist().size)
         return "settings"
     }
@@ -40,7 +42,9 @@ class SettingsController(
         @RequestParam candleLimit: Int,
         @RequestParam oiEnabled: Boolean = false,
         @RequestParam oiThreshold: Double,
-        @RequestParam oiPeriod: String
+        @RequestParam oiPeriod: String,
+        @RequestParam liquidationEnabled: Boolean = false,
+        @RequestParam liquidationMinUsdValue: Double
     ): String {
         SessionUtils.getUserId(session) ?: return "redirect:/login"
 
@@ -55,6 +59,11 @@ class SettingsController(
             enabled = oiEnabled,
             threshold = oiThreshold,
             period = oiPeriod
+        ))
+
+        settingsService.saveLiquidationSettings(LiquidationAlertSettings(
+            enabled = liquidationEnabled,
+            minUsdValue = liquidationMinUsdValue
         ))
 
         return "redirect:/settings"

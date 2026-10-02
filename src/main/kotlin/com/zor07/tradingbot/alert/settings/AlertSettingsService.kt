@@ -3,6 +3,7 @@ package com.zor07.tradingbot.alert.settings
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.zor07.tradingbot.alert.model.AlertType
+import com.zor07.tradingbot.config.properties.LiquidationAlertProperties
 import com.zor07.tradingbot.config.properties.OiAlertProperties
 import com.zor07.tradingbot.config.properties.PriceAlertProperties
 import com.zor07.tradingbot.config.properties.SymbolsProperties
@@ -16,6 +17,7 @@ class AlertSettingsService(
     private val objectMapper: ObjectMapper,
     private val priceAlertProperties: PriceAlertProperties,
     private val oiProperties: OiAlertProperties,
+    private val liquidationProperties: LiquidationAlertProperties,
     private val symbolsProperties: SymbolsProperties,
     private val symbolCacheService: SymbolCacheService
 ) {
@@ -45,6 +47,16 @@ class AlertSettingsService(
 
     fun saveOiSettings(settings: OiAlertSettings) {
         save(AlertType.OPEN_INTEREST_SPIKE.name, settings)
+    }
+
+    fun getLiquidationSettings(): LiquidationAlertSettings {
+        val entity = repository.findByAlertType(AlertType.LIQUIDATION.name)
+            ?: return LiquidationAlertSettings(minUsdValue = liquidationProperties.minUsdValue)
+        return objectMapper.readValue(entity.settings)
+    }
+
+    fun saveLiquidationSettings(settings: LiquidationAlertSettings) {
+        save(AlertType.LIQUIDATION.name, settings)
     }
 
     fun getWatchlist(): List<String> {

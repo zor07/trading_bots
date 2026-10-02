@@ -1,6 +1,7 @@
 package com.zor07.tradingbot.bot
 
 import com.zor07.tradingbot.config.properties.AppProperties
+import com.zor07.tradingbot.config.properties.TelegramProperties
 import com.zor07.tradingbot.user.UserService
 import org.slf4j.LoggerFactory
 import org.telegram.telegrambots.bots.DefaultBotOptions
@@ -14,12 +15,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 
 abstract class AbstractAlertBot(
-    options: DefaultBotOptions,
+    properties: TelegramProperties,
     token: String,
     private val appProperties: AppProperties,
     private val userService: UserService,
     private val botType: BotType
-) : TelegramLongPollingBot(options, token) {
+) : TelegramLongPollingBot(buildOptions(properties), token) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -48,6 +49,18 @@ abstract class AbstractAlertBot(
             }
         }.onFailure {
             log.error("Failed to handle update chatId={}: {}", message.chatId, it.message)
+        }
+    }
+
+    companion object {
+        private fun buildOptions(properties: TelegramProperties): DefaultBotOptions {
+            val options = DefaultBotOptions()
+            if (properties.proxyHost.isNotBlank() && properties.proxyPort > 0) {
+                options.proxyHost = properties.proxyHost
+                options.proxyPort = properties.proxyPort
+                options.proxyType = DefaultBotOptions.ProxyType.SOCKS5
+            }
+            return options
         }
     }
 

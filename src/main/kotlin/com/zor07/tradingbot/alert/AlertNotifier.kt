@@ -1,6 +1,7 @@
 package com.zor07.tradingbot.alert
 
 import com.zor07.tradingbot.bot.BotType
+import com.zor07.tradingbot.bot.LiquidationAlertBot
 import com.zor07.tradingbot.bot.OiAlertBot
 import com.zor07.tradingbot.bot.PriceAlertBot
 import com.zor07.tradingbot.user.UserService
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 class AlertNotifier(
     private val priceBot: PriceAlertBot,
     private val oiBot: OiAlertBot,
+    private val liquidationBot: LiquidationAlertBot,
     private val userService: UserService
 ) {
 
@@ -45,5 +47,6 @@ class AlertNotifier(
     private fun botFor(botType: BotType): TelegramLongPollingBot = when (botType) {
         BotType.PRICE -> priceBot
         BotType.OI -> oiBot
+        BotType.LIQUIDATION -> liquidationBot
     }
 }

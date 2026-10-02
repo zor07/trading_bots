@@ -1,5 +1,6 @@
 package com.zor07.tradingbot.config
 
+import com.zor07.tradingbot.bot.LiquidationAlertBot
 import com.zor07.tradingbot.bot.OiAlertBot
 import com.zor07.tradingbot.bot.PriceAlertBot
 import org.springframework.context.annotation.Bean
@@ -10,7 +11,8 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
 @Configuration
 class TelegramBotConfig(
     private val priceAlertBot: PriceAlertBot,
-    private val oiAlertBot: OiAlertBot
+    private val oiAlertBot: OiAlertBot,
+    private val liquidationAlertBot: LiquidationAlertBot
 ) {
 
     @Bean
@@ -18,6 +20,7 @@ class TelegramBotConfig(
         val api = TelegramBotsApi(DefaultBotSession::class.java)
         api.registerBot(priceAlertBot)
         api.registerBot(oiAlertBot)
+        api.registerBot(liquidationAlertBot)
         return api
     }
 }

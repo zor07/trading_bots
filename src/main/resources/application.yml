@@ -25,6 +25,9 @@ telegram:
   oi-bot:
     token: ${TELEGRAM_OI_BOT_TOKEN}
     username: ${TELEGRAM_OI_BOT_USERNAME}
+  liquidation-bot:
+    token: ${TELEGRAM_LIQUIDATION_BOT_TOKEN}
+    username: ${TELEGRAM_LIQUIDATION_BOT_USERNAME}
   proxy-host: ${TELEGRAM_BOT_PROXY_HOST:}
   proxy-port: ${TELEGRAM_BOT_PROXY_PORT:0}
 
@@ -50,4 +53,6 @@ alerts:
     threshold: 5.0
     period: 5m
     interval: PT60S
+  liquidation:
+    min-usd-value: 100000
 

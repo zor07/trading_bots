@@ -2,6 +2,7 @@ package com.zor07.tradingbot.alert
 
 import com.zor07.tradingbot.alert.settings.OiAlertSettings
 import com.zor07.tradingbot.alert.settings.PriceAlertSettings
+import com.zor07.tradingbot.market.LiquidationData
 import kotlin.math.abs
 
 object AlertMessageBuilder {
@@ -33,10 +34,22 @@ object AlertMessageBuilder {
         """.trimMargin()
     }
 
+    fun buildLiquidationMessage(symbol: String, data: LiquidationData): String {
+        val emoji = if (data.side == "BUY") "🟢" else "🔴"
+        val direction = if (data.side == "BUY") "Лонги ликвидированы" else "Шорты ликвидированы"
+        return """
+            |$emoji $symbol — $direction
+            |Объём: *${formatUsd(data.usdValue)}*
+            |Цена: ${String.format("%.4f", data.price)}
+            |
+            |${links(symbol)}
+        """.trimMargin()
+    }
+
     private fun links(symbol: String): String =
         "Bybit: https://www.bybit.com/ru-RU/trade/usdt/$symbol\nCoinglass: https://www.coinglass.com/tv/ru/Bybit\\_$symbol"
 
-    private fun formatUsd(value: Double): String {
+    fun formatUsd(value: Double): String {
         val a = abs(value)
         return when {
             a >= 1_000_000_000 -> "${String.format("%.2f", value / 1_000_000_000)} млрд. $"

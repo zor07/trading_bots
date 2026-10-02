@@ -24,5 +24,6 @@
     <include file="db/changelog/v1/017_drop_alert_history.xml"/>
     <include file="db/changelog/v1/018_release_note_new_architecture.xml"/>
     <include file="db/changelog/v1/019_release_note_liquidations.xml"/>
+    <include file="db/changelog/v1/020_expand_bot_type_column.xml"/>
 
 </databaseChangeLog>

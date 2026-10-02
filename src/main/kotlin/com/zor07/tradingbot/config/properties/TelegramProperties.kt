@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class TelegramProperties(
     val priceBot: BotConfig,
     val oiBot: BotConfig,
+    val liquidationBot: BotConfig,
     val proxyHost: String = "",
     val proxyPort: Int = 0
 ) {
