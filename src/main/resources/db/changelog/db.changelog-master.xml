@@ -21,5 +21,6 @@
     <include file="db/changelog/v1/014_release_note_oi_growth_only.xml"/>
     <include file="db/changelog/v1/015_release_note_message_format.xml"/>
     <include file="db/changelog/v1/016_release_note_price_counter.xml"/>
+    <include file="db/changelog/v1/017_drop_alert_history.xml"/>
 
 </databaseChangeLog>

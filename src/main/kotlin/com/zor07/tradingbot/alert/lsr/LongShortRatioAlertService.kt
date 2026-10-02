@@ -1,19 +1,11 @@
 package com.zor07.tradingbot.alert.lsr
 
-import com.zor07.tradingbot.alert.AlertHistory
-import com.zor07.tradingbot.alert.AlertHistoryRepository
 import com.zor07.tradingbot.alert.AlertNotifier
-import com.zor07.tradingbot.alert.model.AlertType
 import com.zor07.tradingbot.bot.BotType
 import org.springframework.stereotype.Service
-import java.math.BigDecimal
-import java.time.Instant
 
 @Service
-class LongShortRatioAlertService(
-    private val repository: AlertHistoryRepository,
-    private val notifier: AlertNotifier
-) {
+class LongShortRatioAlertService(private val notifier: AlertNotifier) {
 
     fun handle(symbol: String, accountDelta: Double, positionDelta: Double) {
         val accountEmoji = if (accountDelta > 0) "🟢" else "🔴"
@@ -31,15 +23,6 @@ class LongShortRatioAlertService(
         """.trimMargin()
 
         notifier.send(message, BotType.PRICE)
-        repository.save(
-            AlertHistory(
-                alertType = AlertType.LONG_SHORT_RATIO.name,
-                symbol = symbol,
-                value = BigDecimal.valueOf(accountDelta),
-                message = message,
-                createdAt = Instant.now()
-            )
-        )
     }
 
     private fun formatDelta(delta: Double): String {
